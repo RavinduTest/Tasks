@@ -220,6 +220,56 @@ header{position:relative}
 .trstatus{margin:8px 0 0;font-size:.85rem;color:var(--muted)}
 .trstatus[hidden]{display:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* ---------- team / assignees ---------- */
+:root{--u1:#2F6BFF;--u2:#8B5CF6;--u3:#E0457B;--u4:#0E9F8E}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--u1:#6E97FF;--u2:#A98BFA;--u3:#F27BA3;--u4:#34C7B5}}
+:root[data-theme="dark"]{--u1:#6E97FF;--u2:#A98BFA;--u3:#F27BA3;--u4:#34C7B5}
+.teambar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-basis:100%;padding:8px 10px;margin-top:2px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.teambar > .lbl{font-size:.88rem;font-weight:600;color:var(--ink);margin-right:2px}
+.teambar > .tip{font-size:.8rem;color:var(--muted);flex:1 1 160px;min-width:0}
+.uchip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:999px;border:1.5px solid var(--ucol);background:color-mix(in srgb,var(--ucol) 12%,var(--surface));color:var(--ink);font:inherit;font-weight:700;font-size:.92rem;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.uchip .av{width:32px;height:32px;font-size:.82rem}
+.uchip small{font-weight:600;color:var(--muted);font-size:.78rem}
+.uchip.on{background:var(--ucol);color:#fff;box-shadow:0 0 0 3px color-mix(in srgb,var(--ucol) 30%,transparent)}
+.uchip.on small{color:#fff}
+.uchip.on .av{background:#fff;color:var(--ucol)}
+.av{display:inline-grid;place-items:center;border-radius:50%;background:var(--ucol);color:#fff;font-family:Poppins,"Bricolage Grotesque",sans-serif;font-weight:700;line-height:1;flex:0 0 auto}
+.u-T1{--ucol:var(--u1)} .u-T2{--ucol:var(--u2)} .u-T3{--ucol:var(--u3)} .u-T4{--ucol:var(--u4)}
+.who{display:inline-flex;align-items:center;gap:3px;padding:2px 7px 2px 2px;border-radius:999px;background:color-mix(in srgb,var(--ucol) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--ucol) 50%,transparent);font:inherit;font-size:.8rem;font-weight:700;color:var(--ink);cursor:pointer}
+.who .av{width:24px;height:24px;font-size:.68rem}
+.who.ro{padding:2px}
+.who .x{font-weight:700;color:var(--muted);margin-left:1px}
+.who:hover .x{color:var(--late)}
+.who.ro{cursor:default}
+.task.drop-hot{outline:3px solid var(--accent);outline-offset:2px;background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
+body.assigning .task{cursor:copy}
+body.assigning .task .body{cursor:copy}
+.assignbar{display:flex;align-items:center;gap:10px;flex-basis:100%;background:var(--ink);color:var(--bg);padding:9px 10px 9px 14px;border-radius:12px;font-size:.92rem;font-weight:600}
+.assignbar[hidden]{display:none}
+.assignbar span{flex:1}
+.assignbar button{font:inherit;font-weight:700;background:var(--bg);color:var(--ink);border:0;border-radius:8px;padding:6px 14px;cursor:pointer}
+.ughost{position:fixed;z-index:60;pointer-events:none;transform:translate(-50%,-60%) scale(1.08);box-shadow:0 10px 26px rgba(15,25,45,.35)}
+body.udragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
+.seg4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.seg4 button{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 4px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
+.seg4 button .av{width:24px;height:24px;font-size:.7rem}
+.seg4 button[aria-pressed="true"]{border-color:var(--ucol);background:color-mix(in srgb,var(--ucol) 16%,var(--surface))}
+.team-rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px}
+.team-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font:inherit;color:inherit;text-align:left}
+.team-row .av{width:36px;height:36px;font-size:.9rem}
+.team-row b{display:block;font-size:.95rem}
+.team-row small{display:block;color:var(--muted);font-size:.8rem}
+.team-row.on{outline:2px solid var(--ucol)}
+@media (max-width:600px){
+  .controls{gap:6px;padding-top:8px;padding-bottom:8px}
+  .tabs,.levelbar,.teambar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar,.levelbar::-webkit-scrollbar,.teambar::-webkit-scrollbar{display:none}
+  .tabs > *,.levelbar > *,.teambar > *{flex:0 0 auto}
+  #hint{display:none!important}
+  .teambar{padding:6px 8px;gap:6px}
+  .teambar > .tip{display:none}
+  .tab{padding:7px 12px}
+}
 /* ---------- theme switch ---------- */
 .nav-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
 .themebtn{display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 14px 0 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.9rem;font-weight:600;cursor:pointer}
@@ -312,6 +362,8 @@ button:focus-visible,input:focus-visible{outline:2.5px solid var(--accent);outli
     </div>
     <span class="hint" id="hint" data-t="dragHint">Drag ⋮⋮ to reorder</span>
     <div class="levelbar" id="levelbar" role="group" aria-label="Filter by priority level"></div>
+    <div class="teambar" id="teambar"></div>
+    <div class="assignbar" id="assignbar" role="status" aria-live="polite" hidden></div>
     <div class="datebar" id="datebar" hidden>
       <button type="button" id="dPrev" aria-label="Previous day" data-taria="prevDay">‹</button>
       <input type="date" id="dPick" aria-label="Show tasks with this deadline" data-taria="pickDate">
@@ -347,6 +399,9 @@ button:focus-visible,input:focus-visible{outline:2.5px solid var(--accent);outli
     <button type="button" class="lvl lv-medium" data-lv="medium"><i></i><span data-t="medium">Medium</span></button>
     <button type="button" class="lvl lv-low" data-lv="low"><i></i><span data-t="low">Low</span></button>
   </div>
+
+  <label class="f" data-t="assignedTo">Assigned to</label>
+  <div class="seg4" id="fWho"></div>
 
   <label class="f" for="fPos"><span data-t="priorityNumber">Priority number</span> <small data-t="oneMost">(1 is most important)</small></label>
   <div class="posrow">
@@ -403,7 +458,7 @@ window.FIREBASE_CONFIG = null;
   let levelFilter = "all", pickId = null, selLevel = "medium";
   const I18N = {
     en: {
-      langName:"English", themeToDark:"Switch to dark mode", themeToLight:"Switch to light mode", darkShort:"Dark", lightShort:"Light", localMode:"This copy saves changes on this device only. To share one live list with your team, connect Firebase (see README).", viewLinkNotice:"View-only link: you can see the tasks and progress, but not change them.", cantLoadStandalone:"The shared list couldn’t connect. Check the Firebase settings and your internet connection.", language:"Language", title:"My tasks",
+      langName:"English", team:"Team", teamTip:"Drag a name onto a task, or tap a name and then tap tasks.", teamTipRO:"", assigning:"Tap tasks to assign {u}. Tap again to remove.", finish:"Done", assignedTo:"Assigned to", unassignAria:"Remove {u} from this task", assignedToast:"{u} assigned", alreadyAssigned:"{u} is already on this task", workload:"Team workload", openDone:"{o} to do · {d} done", dragUserAria:"{u}: drag onto a task, or tap to start assigning", themeToDark:"Switch to dark mode", themeToLight:"Switch to light mode", darkShort:"Dark", lightShort:"Light", localMode:"This copy saves changes on this device only. To share one live list with your team, connect Firebase (see README).", viewLinkNotice:"View-only link: you can see the tasks and progress, but not change them.", cantLoadStandalone:"The shared list couldn’t connect. Check the Firebase settings and your internet connection.", language:"Language", title:"My tasks",
       todo:"To do", today:"Today", byDate:"By date", done:"Done",
       dragHint:"Drag ⋮⋮ to reorder", viewOnly:"View only", level:"Level:", all:"All",
       high:"High", medium:"Medium", low:"Low",
@@ -449,7 +504,7 @@ window.FIREBASE_CONFIG = null;
       todayP:"Today, ", tomorrowP:"Tomorrow, ", yesterdayP:"Yesterday, "
     },
     si: {
-      langName:"සිංහල", themeToDark:"අඳුරු ප්‍රකාරයට මාරු වන්න", themeToLight:"ආලෝක ප්‍රකාරයට මාරු වන්න", darkShort:"අඳුරු", lightShort:"ආලෝක", localMode:"මෙම පිටපත වෙනස්කම් සුරකින්නේ මෙම උපාංගයේ පමණි. ඔබේ කණ්ඩායම සමඟ එකම සජීවී ලැයිස්තුවක් බෙදා ගැනීමට Firebase සම්බන්ධ කරන්න (README බලන්න).", viewLinkNotice:"බැලීමට පමණක් සබැඳිය: ඔබට කාර්යයන් සහ ප්‍රගතිය දැකිය හැකි නමුත් වෙනස් කළ නොහැක.", cantLoadStandalone:"හවුල් ලැයිස්තුවට සම්බන්ධ විය නොහැකි විය. Firebase සැකසුම් සහ ඔබේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කරන්න.", language:"භාෂාව", title:"මගේ කාර්යයන්",
+      langName:"සිංහල", team:"කණ්ඩායම", teamTip:"කාර්යයකට නමක් අදින්න, නැතහොත් නමක් තට්ටු කර පසුව කාර්යයන් තට්ටු කරන්න.", teamTipRO:"", assigning:"{u} පැවරීමට කාර්යයන් තට්ටු කරන්න. ඉවත් කිරීමට නැවත තට්ටු කරන්න.", finish:"අවසන්", assignedTo:"පවරා ඇත්තේ", unassignAria:"මෙම කාර්යයෙන් {u} ඉවත් කරන්න", assignedToast:"{u} පවරන ලදී", alreadyAssigned:"{u} දැනටමත් මෙම කාර්යයට පවරා ඇත", workload:"කණ්ඩායම් වැඩ බර", openDone:"කළ යුතු {o} · අවසන් {d}", dragUserAria:"{u}: කාර්යයකට අදින්න, නැතහොත් පැවරීම ආරම්භ කිරීමට තට්ටු කරන්න", themeToDark:"අඳුරු ප්‍රකාරයට මාරු වන්න", themeToLight:"ආලෝක ප්‍රකාරයට මාරු වන්න", darkShort:"අඳුරු", lightShort:"ආලෝක", localMode:"මෙම පිටපත වෙනස්කම් සුරකින්නේ මෙම උපාංගයේ පමණි. ඔබේ කණ්ඩායම සමඟ එකම සජීවී ලැයිස්තුවක් බෙදා ගැනීමට Firebase සම්බන්ධ කරන්න (README බලන්න).", viewLinkNotice:"බැලීමට පමණක් සබැඳිය: ඔබට කාර්යයන් සහ ප්‍රගතිය දැකිය හැකි නමුත් වෙනස් කළ නොහැක.", cantLoadStandalone:"හවුල් ලැයිස්තුවට සම්බන්ධ විය නොහැකි විය. Firebase සැකසුම් සහ ඔබේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කරන්න.", language:"භාෂාව", title:"මගේ කාර්යයන්",
       todo:"කළ යුතු", today:"අද", byDate:"දිනය අනුව", done:"අවසන්",
       dragHint:"පිළිවෙළ වෙනස් කිරීමට ⋮⋮ අදින්න", viewOnly:"බැලීමට පමණි", level:"මට්ටම:", all:"සියල්ල",
       high:"ඉහළ", medium:"මධ්‍යම", low:"අඩු",
@@ -495,7 +550,7 @@ window.FIREBASE_CONFIG = null;
       todayP:"අද, ", tomorrowP:"හෙට, ", yesterdayP:"ඊයේ, "
     },
     ta: {
-      langName:"தமிழ்", themeToDark:"இருண்ட பயன்முறைக்கு மாறவும்", themeToLight:"ஒளி பயன்முறைக்கு மாறவும்", darkShort:"இருண்ட", lightShort:"ஒளி", localMode:"இந்தப் பிரதி மாற்றங்களை இந்தச் சாதனத்தில் மட்டுமே சேமிக்கிறது. உங்கள் குழுவுடன் ஒரே நேரலைப் பட்டியலைப் பகிர Firebase ஐ இணைக்கவும் (README ஐப் பார்க்கவும்).", viewLinkNotice:"பார்வைக்கு மட்டும் இணைப்பு: பணிகளையும் முன்னேற்றத்தையும் பார்க்கலாம், ஆனால் மாற்ற முடியாது.", cantLoadStandalone:"பகிரப்பட்ட பட்டியலுடன் இணைக்க முடியவில்லை. Firebase அமைப்புகளையும் இணைய இணைப்பையும் சரிபார்க்கவும்.", language:"மொழி", title:"எனது பணிகள்",
+      langName:"தமிழ்", team:"குழு", teamTip:"ஒரு பெயரைப் பணியின் மீது இழுக்கவும், அல்லது பெயரைத் தட்டிப் பின் பணிகளைத் தட்டவும்.", teamTipRO:"", assigning:"{u} ஐ ஒதுக்கப் பணிகளைத் தட்டவும். நீக்க மீண்டும் தட்டவும்.", finish:"முடிந்தது", assignedTo:"ஒதுக்கப்பட்டவர்", unassignAria:"இந்தப் பணியிலிருந்து {u} ஐ நீக்கு", assignedToast:"{u} ஒதுக்கப்பட்டார்", alreadyAssigned:"{u} ஏற்கனவே இந்தப் பணியில் உள்ளார்", workload:"குழு பணிச்சுமை", openDone:"செய்ய வேண்டியவை {o} · முடிந்தவை {d}", dragUserAria:"{u}: பணியின் மீது இழுக்கவும், அல்லது ஒதுக்கத் தொடங்கத் தட்டவும்", themeToDark:"இருண்ட பயன்முறைக்கு மாறவும்", themeToLight:"ஒளி பயன்முறைக்கு மாறவும்", darkShort:"இருண்ட", lightShort:"ஒளி", localMode:"இந்தப் பிரதி மாற்றங்களை இந்தச் சாதனத்தில் மட்டுமே சேமிக்கிறது. உங்கள் குழுவுடன் ஒரே நேரலைப் பட்டியலைப் பகிர Firebase ஐ இணைக்கவும் (README ஐப் பார்க்கவும்).", viewLinkNotice:"பார்வைக்கு மட்டும் இணைப்பு: பணிகளையும் முன்னேற்றத்தையும் பார்க்கலாம், ஆனால் மாற்ற முடியாது.", cantLoadStandalone:"பகிரப்பட்ட பட்டியலுடன் இணைக்க முடியவில்லை. Firebase அமைப்புகளையும் இணைய இணைப்பையும் சரிபார்க்கவும்.", language:"மொழி", title:"எனது பணிகள்",
       todo:"செய்ய வேண்டியவை", today:"இன்று", byDate:"தேதி வாரியாக", done:"முடிந்தவை",
       dragHint:"வரிசையை மாற்ற ⋮⋮ ஐ இழுக்கவும்", viewOnly:"பார்வைக்கு மட்டும்", level:"நிலை:", all:"அனைத்தும்",
       high:"உயர்", medium:"நடுத்தர", low:"குறைந்த",
@@ -552,6 +607,108 @@ window.FIREBASE_CONFIG = null;
     return s;
   }
   function LOC(){ return LOCALES[lang] || undefined; }
+  /* ---------- team members & assigning ---------- */
+  const USERS = ["T1","T2","T3","T4"];
+  let assignUser = null, udrag = null, selWho = [];
+  function setAssignees(t, list){
+    const clean = USERS.filter(u=>list.includes(u));
+    updateTask(t.id, {assignees: clean});
+  }
+  function renderTeam(){
+    const bar = document.querySelector("#teambar");
+    if(!canWrite){ bar.hidden = true; document.querySelector("#assignbar").hidden = true; return; }
+    bar.hidden = false;
+    const open = tasks.filter(t=>!t.done);
+    bar.innerHTML = `<span class="lbl">${esc(T("team"))}:</span>` + USERS.map(u=>{
+      const n = open.filter(t=>Array.isArray(t.assignees) && t.assignees.includes(u)).length;
+      return `<button type="button" class="uchip u-${u}${assignUser===u?" on":""}" data-udrag="${u}" aria-pressed="${assignUser===u}" aria-label="${esc(T("dragUserAria",{u}))}"><span class="av">${u}</span><small>${n}</small></button>`;
+    }).join("") + `<span class="tip">${esc(T("teamTip"))}</span>`;
+    const ab = document.querySelector("#assignbar");
+    if(assignUser){ ab.hidden = false; ab.innerHTML = `<span>${esc(T("assigning",{u:assignUser}))}</span><button type="button" id="assignDone">${esc(T("finish"))}</button>`; }
+    else ab.hidden = true;
+    document.body.classList.toggle("assigning", !!assignUser);
+  }
+  function setAssignMode(u){ assignUser = (assignUser===u) ? null : u; render(); }
+  document.addEventListener("click", e=>{
+    if(e.target.closest("#assignDone")){ assignUser = null; render(); return; }
+    const k = e.target.closest("button[data-udrag]");
+    if(k && e.detail === 0 && canWrite) setAssignMode(k.dataset.udrag);
+  });
+  document.addEventListener("keydown", e=>{
+    if(e.key==="Escape" && assignUser){ assignUser = null; render(); }
+    const r = e.target.closest && e.target.closest(".team-row[data-udrag]");
+    if(r && (e.key==="Enter" || e.key===" ")){ e.preventDefault(); setAssignMode(r.dataset.udrag); }
+  });
+  function renderWho(){
+    document.querySelector("#fWho").innerHTML = USERS.map(u=>`<button type="button" class="u-${u}" data-who="${u}" aria-pressed="${selWho.includes(u)}"${canWrite?"":" disabled"}><span class="av">${u}</span>${u}</button>`).join("");
+  }
+  document.querySelector("#fWho").addEventListener("click", e=>{
+    const b = e.target.closest("[data-who]"); if(!b || b.disabled) return;
+    const u = b.dataset.who;
+    selWho = selWho.includes(u) ? selWho.filter(x=>x!==u) : selWho.concat([u]);
+    renderWho();
+  });
+
+  /* drag a name onto a task (touch + mouse); a tap without moving starts tap-to-assign */
+  function taskAt(x, y){
+    const el = document.elementFromPoint(x, y);
+    return el && el.closest ? el.closest("#list .task") : null;
+  }
+  function clearHot(){ document.querySelectorAll(".task.drop-hot").forEach(x=>x.classList.remove("drop-hot")); }
+  document.addEventListener("pointerdown", e=>{
+    const c = e.target.closest("[data-udrag]"); if(!c || !canWrite) return;
+    if(drag) endDrag();
+    if(udrag) endUdrag(null, true);
+    if(e.button !== undefined && e.button !== 0) return;
+    e.preventDefault();
+    udrag = { u: c.dataset.udrag, x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, pid: e.pointerId, moved: false, ghost: null, raf: 0 };
+  });
+  document.addEventListener("pointermove", e=>{
+    if(!udrag || e.pointerId !== udrag.pid) return;
+    if(e.pointerType === "mouse" && e.buttons === 0){ endUdrag(null, true); return; }
+    udrag.x = e.clientX; udrag.y = e.clientY;
+    if(!udrag.moved && Math.hypot(e.clientX-udrag.x0, e.clientY-udrag.y0) > 8){
+      udrag.moved = true;
+      const g = document.createElement("div");
+      g.className = `uchip on ughost u-${udrag.u}`;
+      g.innerHTML = `<span class="av">${udrag.u}</span>`;
+      document.body.appendChild(g); udrag.ghost = g;
+      document.body.classList.add("udragging");
+      if(navigator.vibrate) try{ navigator.vibrate(10); }catch(_){}
+      const tick = ()=>{
+        if(!udrag || !udrag.moved) return;
+        const edge = 80, H = window.innerHeight; let dy = 0;
+        if(udrag.y < edge) dy = -Math.ceil((edge-udrag.y)/6);
+        else if(udrag.y > H-edge) dy = Math.ceil((udrag.y-(H-edge))/6);
+        if(dy){ window.scrollBy(0, dy); hot(); }
+        udrag.raf = requestAnimationFrame(tick);
+      };
+      udrag.raf = requestAnimationFrame(tick);
+    }
+    if(udrag.moved){ e.preventDefault(); udrag.ghost.style.left = e.clientX+"px"; udrag.ghost.style.top = e.clientY+"px"; hot(); }
+  });
+  function hot(){ clearHot(); const li = taskAt(udrag.x, udrag.y); if(li) li.classList.add("drop-hot"); }
+  function endUdrag(e, cancelled){
+    if(!udrag || (e && e.pointerId !== udrag.pid)) return;
+    const d = udrag; udrag = null;
+    cancelAnimationFrame(d.raf); clearHot();
+    if(d.ghost) d.ghost.remove();
+    document.body.classList.remove("udragging");
+    if(cancelled) return;
+    if(!d.moved){ setAssignMode(d.u); return; }
+    const li = taskAt(d.x, d.y); if(!li) return;
+    const t = tasks.find(x=>x.id===li.dataset.id); if(!t) return;
+    const cur = Array.isArray(t.assignees) ? t.assignees : [];
+    if(cur.includes(d.u)){ flash(T("alreadyAssigned",{u:d.u})); return; }
+    setAssignees(t, cur.concat([d.u]));
+    flash(T("assignedToast",{u:d.u}));
+  }
+  document.addEventListener("pointerup", e=>endUdrag(e, false));
+  document.addEventListener("pointercancel", e=>endUdrag(e, true));
+  window.addEventListener("blur", ()=>{ if(udrag) endUdrag(null, true); if(drag) endDrag(); });
+  document.addEventListener("visibilitychange", ()=>{ if(document.hidden){ if(udrag) endUdrag(null, true); if(drag) endDrag(); } });
+  document.addEventListener("touchmove", e=>{ if(udrag && udrag.moved) e.preventDefault(); }, {passive:false});
+
   /* ---------- light / dark mode ---------- */
   const THEME_KEY = "mytasks.theme";
   const darkMQ = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
@@ -876,6 +1033,10 @@ window.FIREBASE_CONFIG = null;
       ? `<span class="lvl-pick">${["high","medium","low"].map(k=>`<button type="button" class="lvl lv-${k}${lv===k?" on":""}" data-setlv="${k}"><i></i>${LV[k]}</button>`).join("")}</span>`
       : `<button type="button" class="lvl lv-${lv}" data-openlv aria-label="${esc(T("levelAria",{l:lv==="none"?T("notSet"):LV[lv]}))}"><i></i>${esc(lv==="none"?T("setLevel"):LV[lv])}</button>`;
     parts.unshift(lvHTML);
+    const who = (Array.isArray(t.assignees) ? t.assignees : []).filter(u=>USERS.includes(u));
+    if(who.length) parts.splice(1, 0, who.map(u => canWrite
+      ? `<button type="button" class="who u-${u}" data-unassign="${u}" aria-label="${esc(T("unassignAria",{u}))}"><span class="av">${u}</span><span class="x" aria-hidden="true">×</span></button>`
+      : `<span class="who ro u-${u}"><span class="av">${u}</span></span>`).join(""));
     return `<li class="task lv-${lv}${t.done?" done":""}${(filter==="today"||filter==="date") && n>=1 && n<=3 ? " top" : ""}" data-id="${esc(t.id)}">
       <div class="num" aria-label="Priority ${n||""}"><span>${t.done?"✓":n}</span></div>
       <div class="body" role="button" tabindex="0" aria-label="${esc(T("editAria",{t:(n?n+", ":"")+TXF(t,"title")}))}">
@@ -928,6 +1089,7 @@ window.FIREBASE_CONFIG = null;
     }
     $("#list").innerHTML = html;
     renderDash();
+    renderTeam();
     scheduleTranslate();
   }
 
@@ -996,6 +1158,14 @@ window.FIREBASE_CONFIG = null;
 
     $("#dash").innerHTML = `<div class="dash-card">
       <div class="dash-head">${head}</div>
+      <div class="dash-sec">
+        <h3>${esc(T("workload"))}</h3>
+        <div class="team-rows">${USERS.map(u=>{
+          const mine = tasks.filter(t=>Array.isArray(t.assignees) && t.assignees.includes(u));
+          const o = mine.filter(t=>!t.done).length, d = mine.length - o;
+          return `<div class="team-row u-${u}${assignUser===u?" on":""}"${canWrite?` data-udrag="${u}" role="button" tabindex="0" aria-label="${esc(T("dragUserAria",{u}))}"`:""}><span class="av">${u}</span><span><b>${u}</b><small>${esc(T("openDone",{o,d}))}</small></span></div>`;
+        }).join("")}</div>
+      </div>
       <div class="dash-sec">
         <h3>${esc(T("deadlines"))}</h3>
         <div class="tiles">
@@ -1093,12 +1263,15 @@ window.FIREBASE_CONFIG = null;
   }
 
   $("#list").addEventListener("pointerdown", e=>{
-    const h = e.target.closest(".handle"); if(!h || !canWrite || drag) return;
+    const h = e.target.closest(".handle"); if(!h || !canWrite) return;
+    if(drag) endDrag();
+    if(udrag) endUdrag(null, true);
     e.preventDefault();
     h.setPointerCapture(e.pointerId);
     startDrag(e, h.closest(".task"));
   });
-  $("#list").addEventListener("pointermove", e=>{ if(drag && e.pointerId===drag.pid){ e.preventDefault(); moveDrag(e.clientY); } });
+  $("#list").addEventListener("pointermove", e=>{ if(drag && e.pointerId===drag.pid){ if(e.pointerType==="mouse" && e.buttons===0){ endDrag(); return; } e.preventDefault(); moveDrag(e.clientY); } });
+  document.addEventListener("pointerup", e=>{ if(drag && e.pointerId===drag.pid) endDrag(); });
   $("#list").addEventListener("pointerup", e=>{ if(drag && e.pointerId===drag.pid) endDrag(); });
   $("#list").addEventListener("pointercancel", e=>{ if(drag && e.pointerId===drag.pid) endDrag(); });
   $("#list").addEventListener("touchmove", e=>{ if(drag) e.preventDefault(); }, {passive:false});
@@ -1115,6 +1288,8 @@ window.FIREBASE_CONFIG = null;
     $("#delBtn").hidden = !t || !canWrite;
     $("#fTitle").value = t ? t.title : "";
     setLevel(t && LV[t.priority] ? t.priority : (t ? "" : "medium"));
+    selWho = t && Array.isArray(t.assignees) ? t.assignees.slice() : [];
+    renderWho();
     $("#fPos").value = cur; $("#fPos").max = max;
     $("#fDate").value = t ? (t.date||"") : "";
     $("#fDate").min = todayStr(0);
@@ -1144,7 +1319,7 @@ window.FIREBASE_CONFIG = null;
     if(!title){ $("#fErr").textContent = T("errTitle"); $("#fTitle").focus(); return; }
     const date = $("#fDate").value || "";
     if(date && date < todayStr(0) && date !== origDate){ $("#fErr").textContent = T("errPast"); return; }
-    const data = { title, date, time: "", category: $("#fCat").value.trim(), notes: $("#fNotes").value.trim() };
+    const data = { title, date, time: "", category: $("#fCat").value.trim(), notes: $("#fNotes").value.trim(), assignees: USERS.filter(u=>selWho.includes(u)) };
     if(selLevel) data.priority = selLevel;
     const others = openTasks().filter(t=>t.id!==editingId);
     let pos = parseInt($("#fPos").value, 10);
@@ -1198,6 +1373,13 @@ window.FIREBASE_CONFIG = null;
     const li = e.target.closest(".task"); if(!li || drag) return;
     if(e.target.closest(".dl-input")) return;
     const t = tasks.find(x=>x.id===li.dataset.id); if(!t) return;
+    const un = e.target.closest("[data-unassign]");
+    if(un){ if(canWrite) setAssignees(t, (t.assignees||[]).filter(u=>u!==un.dataset.unassign)); return; }
+    if(assignUser && canWrite && !e.target.closest(".check, .handle, [data-openlv], [data-setlv]")){
+      const cur = Array.isArray(t.assignees) ? t.assignees : [];
+      setAssignees(t, cur.includes(assignUser) ? cur.filter(u=>u!==assignUser) : cur.concat([assignUser]));
+      return;
+    }
     if(e.target.closest("[data-openlv]")){ if(canWrite){ pickId = t.id; render(); } else openSheet(t); return; }
     const sl = e.target.closest("[data-setlv]");
     if(sl){ pickId = null; updateTask(t.id, {priority: sl.dataset.setlv}); return; }
