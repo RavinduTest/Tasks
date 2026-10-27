@@ -629,7 +629,7 @@ window.FIREBASE_CONFIG = {
     bar.innerHTML = `<span class="lbl">${esc(T("team"))}:</span>` + USERS.map(u=>{
       const n = open.filter(t=>Array.isArray(t.assignees) && t.assignees.includes(u)).length;
       return `<button type="button" class="uchip u-${u}${assignUser===u?" on":""}" data-udrag="${u}" aria-pressed="${assignUser===u}" aria-label="${esc(T("dragUserAria",{u}))}"><span class="av">${u}</span><small>${n}</small></button>`;
-    }).join("") + `<span class="tip">${esc(T("teamTip"))}</span>`;
+    }).join("");
     const ab = document.querySelector("#assignbar");
     if(assignUser){ ab.hidden = false; ab.innerHTML = `<span>${esc(T("assigning",{u:assignUser}))}</span><button type="button" id="assignDone">${esc(T("finish"))}</button>`; }
     else ab.hidden = true;
