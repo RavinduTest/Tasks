@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Tasks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=Noto+Sans+Sinhala:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EEF3; --surface:#FFFFFF; --ink:#1B2A47; --muted:#5E6B82; --line:#D3DBE5;
+  --late:#D63B40; --accent:#2F55D4; --accent-ink:#FFFFFF; --num-bg:#DCE4F7;
+  --sheet-shade:rgba(15,25,45,.45);
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121826; --surface:#1C2436; --ink:#E7ECF5; --muted:#9AA6BC; --line:#2C3650;
+    --late:#FF6B6F; --accent:#7D9BFF; --accent-ink:#0F1524; --num-bg:#26345A;
+    --sheet-shade:rgba(0,0,0,.6); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121826; --surface:#1C2436; --ink:#E7ECF5; --muted:#9AA6BC; --line:#2C3650;
+  --late:#FF6B6F; --accent:#7D9BFF; --accent-ink:#0F1524; --num-bg:#26345A;
+  --sheet-shade:rgba(0,0,0,.6); color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,"Noto Sans Sinhala","Noto Sans Tamil",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
+.wrap{max-width:560px;margin:0 auto;padding:0 14px 120px}
+header{padding:26px 4px 6px}
+.date-line{color:var(--muted);font-size:.95rem;margin:0}
+h1{font-family:"Bricolage Grotesque",Figtree,"Noto Sans Sinhala","Noto Sans Tamil",system-ui,sans-serif;font-weight:800;font-size:clamp(2.1rem,9vw,2.8rem);line-height:1.05;margin:4px 0 0;letter-spacing:-.02em}
+.summary{margin:10px 0 0;color:var(--muted)}
+.summary b{color:var(--ink);font-weight:600}
+.summary .late{color:var(--late)}
+.notice{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:12px;font-size:.92rem;color:var(--muted)}
+
+.controls{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;padding:12px 4px 10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-weight:500;padding:8px 14px;border-radius:999px;cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.hint{font-size:.85rem;color:var(--muted);text-align:right}
+
+ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.task{display:flex;align-items:stretch;background:var(--surface);border-radius:14px;border:1px solid var(--line);min-height:60px}
+.num{flex:0 0 48px;display:grid;place-items:center;font-family:"Bricolage Grotesque",Figtree,"Noto Sans Sinhala","Noto Sans Tamil",sans-serif;font-weight:800;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.num span{min-width:34px;height:34px;padding:0 6px;border-radius:10px;background:var(--num-bg);display:grid;place-items:center;line-height:1}
+.ranked .task:nth-child(-n+3) .num span,.task.top .num span{background:var(--accent);color:var(--accent-ink)}
+.done .num span{background:transparent;color:var(--muted)}
+.body{flex:1;min-width:0;background:none;border:0;text-align:left;font:inherit;color:inherit;padding:11px 6px 11px 4px;cursor:pointer}
+.title{font-weight:600;overflow-wrap:anywhere}
+.done .title{text-decoration:line-through;color:var(--muted);font-weight:500}
+.meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:2px;font-size:.84rem;color:var(--muted)}
+:root{--warn:#A85F00}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--warn:#F5B23A}}
+:root[data-theme="dark"]{--warn:#F5B23A}
+.meta{align-items:center}
+.meta .dl{order:-1;flex-basis:100%;display:flex}
+.meta .dl b{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.86rem;padding:4px 10px;border-radius:8px;color:var(--accent);background:color-mix(in srgb,var(--accent) 13%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);margin:4px 0 2px}
+.meta .dl b svg{width:14px;height:14px;flex:0 0 14px}
+.meta .dl.soon b{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,var(--surface));border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.meta .dl.late b{color:#fff;background:var(--late);border-color:var(--late)}
+.meta .dl.none b{color:var(--muted);background:transparent;border:1px dashed var(--line);font-weight:500}
+.done .meta .dl b{color:var(--muted);background:transparent;border-color:var(--line)}
+.meta .late{color:var(--late);font-weight:600}
+.check{flex:0 0 44px;display:grid;place-items:center;background:none;border:0;cursor:pointer;padding:0}
+.check span{width:24px;height:24px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center}
+.done .check span{background:var(--accent);border-color:var(--accent)}
+.done .check span::after{content:"";width:6px;height:11px;border:solid var(--accent-ink);border-width:0 2.5px 2.5px 0;transform:translate(0,-1px) rotate(45deg)}
+.handle{flex:0 0 44px;display:grid;place-items:center;background:none;border:0;border-left:1px solid var(--line);color:var(--muted);cursor:grab;touch-action:none;padding:0;border-radius:0 14px 14px 0}
+.handle svg{width:20px;height:20px}
+.handle:active{cursor:grabbing}
+.task.lifted{position:fixed;z-index:30;box-shadow:0 14px 32px rgba(15,25,45,.28);border-color:var(--accent);pointer-events:none;transform:scale(1.02)}
+.placeholder{border:2px dashed var(--accent);border-radius:14px;background:transparent;opacity:.6}
+
+.empty{text-align:center;padding:48px 16px;color:var(--muted)}
+.empty p{margin:0}
+.empty strong{display:block;color:var(--ink);font-family:"Bricolage Grotesque","Noto Sans Sinhala","Noto Sans Tamil",sans-serif;font-size:1.25rem;margin-bottom:6px}
+.clear-done{display:block;margin:24px auto 0;font:inherit;font-size:.9rem;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer}
+.sync{font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
+
+.fab{position:fixed;right:max(18px,calc(50% - 262px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:6;background:var(--accent);color:var(--accent-ink);border:0;border-radius:999px;font:inherit;font-weight:600;font-size:1.05rem;padding:15px 22px;box-shadow:0 8px 24px rgba(47,85,212,.35);cursor:pointer;display:flex;align-items:center;gap:8px}
+.fab svg{width:20px;height:20px}
+.fab[hidden]{display:none}
+
+.shade{position:fixed;inset:0;background:var(--sheet-shade);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.shade.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--surface);border-radius:20px 20px 0 0;max-width:560px;margin:0 auto;padding:10px 20px calc(20px + env(safe-area-inset-bottom,0px));transform:translateY(105%);transition:transform .25s ease;max-height:92vh;overflow:auto}
+.sheet.open{transform:none}
+.grip{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+.sheet h3{font-family:"Bricolage Grotesque","Noto Sans Sinhala","Noto Sans Tamil",sans-serif;font-size:1.35rem;margin:0 0 6px}
+label.f{display:block;font-weight:600;font-size:.92rem;margin:14px 0 6px}
+label.f small{font-weight:400;color:var(--muted)}
+.input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px}
+textarea.input{min-height:70px;resize:vertical}
+.input:focus{outline:none;border-color:var(--accent)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.posrow{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center}
+.posrow span{color:var(--muted);font-size:.9rem}
+.quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.quick button{font:inherit;font-size:.88rem;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.actions{display:flex;gap:10px;margin-top:22px}
+.btn{flex:1;font:inherit;font-weight:600;padding:14px;border-radius:12px;border:0;cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.danger{flex:0 0 auto;background:transparent;color:var(--late);border:1.5px solid var(--line);padding:14px 16px}
+.btn[hidden]{display:none}
+.err{color:var(--late);font-size:.88rem;margin:6px 0 0;min-height:1em}
+/* ---------- progress dashboard ---------- */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+.dash,.dash-card{min-width:0}
+.col-main{display:contents}
+.col-main > header{order:0}
+.dash{order:1;margin-top:14px}
+.col-main > .controls{order:2}
+.col-main > main{order:3}
+.col-main > .sync{order:4}
+.dash-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.dash-head{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.ring{flex:0 0 96px;width:96px;height:96px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .track{stroke:var(--num-bg)}
+.ring .fill{stroke:var(--accent);transition:stroke-dashoffset .5s ease}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:"Bricolage Grotesque","Noto Sans Sinhala","Noto Sans Tamil",sans-serif;font-weight:800;font-size:1.5rem}
+.dash h2{font-family:"Bricolage Grotesque","Noto Sans Sinhala","Noto Sans Tamil",sans-serif;font-size:1.35rem;margin:0;line-height:1.2}
+.dash-head p{margin:3px 0 0;color:var(--muted);font-size:.95rem}
+.dash-head p b{color:var(--ink)}
+.dash-head .back{margin-top:8px;font:inherit;font-size:.88rem;font-weight:600;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+.dash h3{font-family:"Bricolage Grotesque","Noto Sans Sinhala","Noto Sans Tamil",sans-serif;font-size:1.02rem;margin:0 0 10px}
+.dash-sec{margin-top:22px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.tile{border-radius:12px;padding:12px 14px;background:var(--bg);border:1px solid var(--line);text-align:left;font:inherit;color:inherit}
+button.tile{cursor:pointer}
+button.tile:hover{border-color:var(--accent)}
+.tile strong{display:block;font-family:"Bricolage Grotesque","Noto Sans Sinhala","Noto Sans Tamil",sans-serif;font-weight:800;font-size:1.8rem;line-height:1.1}
+.tile span{font-size:.85rem;color:var(--muted)}
+.tile.t-late strong{color:var(--late)} .tile.t-today strong{color:var(--warn)} .tile.t-week strong{color:var(--accent)}
+.chart{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;align-items:end;height:150px;padding-top:18px}
+.day{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;background:none;border:0;padding:0 0 2px;cursor:pointer;font:inherit;color:var(--muted);border-radius:8px;min-width:0}
+.day:hover{background:var(--bg)}
+.day .cnt{font-size:.75rem;font-weight:600;color:var(--ink);min-height:1em}
+.day .col{width:70%;max-width:26px;border-radius:5px 5px 2px 2px;background:var(--num-bg);display:flex;flex-direction:column-reverse;overflow:hidden;margin-top:3px}
+.day .col i{display:block;background:var(--accent)}
+.day .lbl{font-size:.7rem;margin-top:5px;line-height:1.15;text-align:center}
+.day .lbl b{display:block;font-size:.85rem;color:var(--ink)}
+.day.is-today .lbl b{color:var(--warn)}
+.day.sel{background:color-mix(in srgb,var(--accent) 12%,transparent);outline:2px solid var(--accent);outline-offset:-2px}
+.legend{display:flex;gap:14px;font-size:.8rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.lists{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;margin-top:22px}
+.next{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.next li{display:flex;gap:10px;align-items:flex-start;font-size:.92rem}
+.next .n{flex:0 0 26px;height:26px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:"Bricolage Grotesque","Noto Sans Sinhala","Noto Sans Tamil",sans-serif;font-weight:800;font-size:.85rem}
+.next .n.ok{background:var(--num-bg);color:var(--ink)}
+.next small{display:block;color:var(--muted)}
+.next small.late{color:var(--late);font-weight:600}
+.dash .none{color:var(--muted);font-size:.9rem;margin:0}
+.datebar{display:flex;align-items:center;gap:6px;flex-basis:100%}
+.datebar[hidden]{display:none}
+.datebar input{flex:1;min-width:0;max-width:220px;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:7px 10px}
+.datebar button{font:inherit;font-weight:600;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:7px 12px;cursor:pointer}
+.controls{flex-wrap:wrap}
+@media (min-width:900px){
+  .wrap{max-width:none;padding:0 28px 120px}
+  .layout{grid-template-columns:minmax(360px,560px) minmax(0,1fr);gap:32px;align-items:start}
+  .col-main{display:block}
+  .dash{position:sticky;top:calc(20px + env(safe-area-inset-top,0px));margin-top:26px;max-height:calc(100vh - 40px);overflow:auto;border-radius:18px}
+  .dash-card{min-height:calc(100vh - 40px)}
+  .fab{right:auto;left:calc(28px + 560px - 170px)}
+}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:50;display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--bg);padding:12px 14px 12px 18px;border-radius:12px;box-shadow:0 10px 28px rgba(15,25,45,.3);font-size:.95rem;max-width:calc(100vw - 32px)}
+.toast[hidden]{display:none}
+.toast button{font:inherit;font-weight:700;color:var(--bg);background:transparent;border:1.5px solid currentColor;border-radius:8px;padding:5px 12px;cursor:pointer}
+:root{--lv-high:#D63B40;--lv-med:#C77A00;--lv-low:#1F8F84}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--lv-high:#FF6B6F;--lv-med:#F5B23A;--lv-low:#3CC2B4}}
+:root[data-theme="dark"]{--lv-high:#FF6B6F;--lv-med:#F5B23A;--lv-low:#3CC2B4}
+.task.lv-high{box-shadow:inset 5px 0 0 var(--lv-high)}
+.task.lv-medium{box-shadow:inset 5px 0 0 var(--lv-med)}
+.task.lv-low{box-shadow:inset 5px 0 0 var(--lv-low)}
+.lvl{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:.82rem;font-weight:700;padding:4px 10px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;line-height:1.2}
+.lvl i{width:9px;height:9px;border-radius:50%;background:var(--muted)}
+.lvl.lv-high{border-color:var(--lv-high);color:var(--lv-high)} .lvl.lv-high i{background:var(--lv-high)}
+.lvl.lv-medium{border-color:var(--lv-med);color:var(--lv-med)} .lvl.lv-medium i{background:var(--lv-med)}
+.lvl.lv-low{border-color:var(--lv-low);color:var(--lv-low)} .lvl.lv-low i{background:var(--lv-low)}
+.lvl.lv-none{border-style:dashed;color:var(--muted);font-weight:500}
+.lvl.on.lv-high{background:var(--lv-high);color:#fff} .lvl.on.lv-medium{background:var(--lv-med);color:#fff} .lvl.on.lv-low{background:var(--lv-low);color:#fff}
+.lvl.on i{background:#fff}
+.lvl-pick{display:inline-flex;gap:6px;flex-wrap:wrap}
+.levelbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-basis:100%}
+.levelbar > span{font-size:.88rem;color:var(--muted);margin-right:2px}
+.levelbar .lvl{padding:6px 12px;font-size:.88rem}
+.levelbar .lvl.all{font-weight:600}
+.levelbar .lvl.all.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seg .lvl{justify-content:center;padding:12px 6px;font-size:1rem;border-radius:12px}
+/* tap anywhere on a date field to open the calendar */
+.meta .dl b{position:relative;min-height:34px;padding:6px 12px;font-size:.88rem}
+.meta .dl b svg{width:17px;height:17px;flex:0 0 17px}
+.meta .dl.none b{border-width:1.5px;color:var(--accent);font-weight:600;border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.dl-input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0;margin:0;font-size:16px;-webkit-appearance:none;appearance:none}
+.dl-input::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;cursor:pointer}
+#fDate,#dPick{position:relative;cursor:pointer;padding-left:44px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233F63DB' stroke-width='2.2' stroke-linecap='round'%3E%3Crect x='3.5' y='5' width='17' height='15.5' rx='2.5'/%3E%3Cpath d='M3.5 10h17M8 3v4M16 3v4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:14px center;background-size:20px}
+#fDate{min-height:52px}
+#fDate::-webkit-calendar-picker-indicator,#dPick::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:auto;height:auto;opacity:0;cursor:pointer}
+header{position:relative}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.langpick{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1.5px solid var(--line);border-radius:999px;padding:4px 6px 4px 12px;color:var(--ink);cursor:pointer}
+.langpick:focus-within{border-color:var(--accent)}
+.langpick svg{width:18px;height:18px;flex:0 0 18px;color:var(--accent)}
+.langpick .lbl{font-size:.88rem;font-weight:600}
+.langpick select{font:inherit;font-size:16px;font-weight:600;color:var(--ink);background:var(--bg);border:0;border-radius:999px;padding:6px 10px;cursor:pointer}
+.trstatus{margin:8px 0 0;font-size:.85rem;color:var(--muted)}
+.trstatus[hidden]{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+button:focus-visible,input:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="layout">
+<div class="col-main">
+  <header>
+    <div class="topbar">
+      <p class="date-line" id="todayLine"></p>
+      <label class="langpick">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9M12 3c-2.5 2.6-3.8 5.6-3.8 9s1.3 6.4 3.8 9"/></svg>
+        <span class="lbl" data-t="language">Language</span>
+        <select id="langSel" aria-label="Language">
+          <option value="en">English</option>
+          <option value="si">සිංහල</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+      </label>
+    </div>
+    <h1 data-t="title">My tasks</h1>
+    <p class="trstatus" id="trStatus" role="status" aria-live="polite" hidden></p>
+    <p class="summary" id="summary"></p>
+    <p class="notice" id="notice" hidden></p>
+  </header>
+
+  <div class="controls">
+    <div class="tabs" role="group" aria-label="Show">
+      <button class="tab" data-f="todo" aria-pressed="true" data-t="todo">To do</button>
+      <button class="tab" data-f="today">Today</button>
+      <button class="tab" data-f="date" data-t="byDate">By date</button>
+      <button class="tab" data-f="done" data-t="done">Done</button>
+    </div>
+    <span class="hint" id="hint" data-t="dragHint">Drag ⋮⋮ to reorder</span>
+    <div class="levelbar" id="levelbar" role="group" aria-label="Filter by priority level"></div>
+    <div class="datebar" id="datebar" hidden>
+      <button type="button" id="dPrev" aria-label="Previous day" data-taria="prevDay">‹</button>
+      <input type="date" id="dPick" aria-label="Show tasks with this deadline" data-taria="pickDate">
+      <button type="button" id="dNext" aria-label="Next day" data-taria="nextDay">›</button>
+      <button type="button" id="dToday" data-t="today">Today</button>
+    </div>
+  </div>
+
+  <main id="list"></main>
+  <p class="sync" id="sync"></p>
+</div>
+<aside class="dash" id="dash" aria-label="Progress dashboard"></aside>
+</div>
+</div>
+
+<button class="fab" id="addBtn" aria-label="Add task" data-taria="addTask">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+  <span data-t="addTask">Add task</span>
+</button>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden><span id="toastMsg"></span><button type="button" id="undoBtn" data-t="undo">Undo</button></div>
+<div class="shade" id="shade"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="grip"></div>
+  <h3 id="sheetTitle">New task</h3>
+  <label class="f" for="fTitle" data-t="task">Task</label>
+  <input class="input" id="fTitle" placeholder="What needs doing?" data-tph="taskPh" maxlength="200" autocomplete="off">
+  <p class="err" id="fErr"></p>
+
+  <label class="f" data-t="priorityLevel">Priority level</label>
+  <div class="seg" id="fLevel">
+    <button type="button" class="lvl lv-high" data-lv="high"><i></i><span data-t="high">High</span></button>
+    <button type="button" class="lvl lv-medium" data-lv="medium"><i></i><span data-t="medium">Medium</span></button>
+    <button type="button" class="lvl lv-low" data-lv="low"><i></i><span data-t="low">Low</span></button>
+  </div>
+
+  <label class="f" for="fPos"><span data-t="priorityNumber">Priority number</span> <small data-t="oneMost">(1 is most important)</small></label>
+  <div class="posrow">
+    <input class="input" type="number" id="fPos" min="1" inputmode="numeric">
+    <span id="posHint"></span>
+  </div>
+
+  <label class="f" for="fDate" data-t="deadlineDate">Deadline date</label>
+  <input class="input" type="date" id="fDate">
+  <div class="quick">
+    <button type="button" data-q="0" data-t="today">Today</button>
+    <button type="button" data-q="1" data-t="tomorrow">Tomorrow</button>
+    <button type="button" data-q="7" data-t="nextWeek">Next week</button>
+    <button type="button" data-q="none" data-t="noDeadline">No deadline</button>
+  </div>
+
+  <label class="f" for="fCat"><span data-t="section">Section</span> <small data-t="optional">(optional)</small></label>
+  <input class="input" id="fCat" list="catList" placeholder="e.g. Face-to-Face" data-tph="sectionPh" maxlength="80" autocomplete="off">
+  <datalist id="catList"></datalist>
+
+  <label class="f" for="fNotes"><span data-t="notes">Notes</span> <small data-t="optional">(optional)</small></label>
+  <textarea class="input" id="fNotes" maxlength="1000"></textarea>
+
+  <div class="actions">
+    <button class="btn danger" id="delBtn" type="button" hidden data-t="del">Delete</button>
+    <button class="btn ghost" id="cancelBtn" type="button">Cancel</button>
+    <button class="btn primary" id="saveBtn" type="button">Add task</button>
+  </div>
+</section>
+
+<script>
+/* ============================================================
+   SETTINGS — read README.md for the step-by-step guide.
+   Leave FIREBASE_CONFIG as null to run in "this device only" mode.
+   To share one live list with your team, paste your Firebase
+   web app config here, for example:
+   window.FIREBASE_CONFIG = {
+     apiKey: "…", authDomain: "…", projectId: "…",
+     storageBucket: "…", messagingSenderId: "…", appId: "…"
+   };
+   ============================================================ */
+window.FIREBASE_CONFIG = null;
+</script>
+<script>
+(function(){
+  const CACHE_KEY = "mytasks.ranked.cache";
+  let tasks = [];
+  let filter = "todo";
+  let editingId = null;
+  let col = null;
+  let canWrite = true;
+  let loaded = false;
+  let drag = null;
+  let levelFilter = "all", pickId = null, selLevel = "medium";
+  const I18N = {
+    en: {
+      langName:"English", localMode:"This copy saves changes on this device only. To share one live list with your team, connect Firebase (see README).", viewLinkNotice:"View-only link: you can see the tasks and progress, but not change them.", cantLoadStandalone:"The shared list couldn’t connect. Check the Firebase settings and your internet connection.", language:"Language", title:"My tasks",
+      todo:"To do", today:"Today", byDate:"By date", done:"Done",
+      dragHint:"Drag ⋮⋮ to reorder", viewOnly:"View only", level:"Level:", all:"All",
+      high:"High", medium:"Medium", low:"Low",
+      prevDay:"Previous day", nextDay:"Next day", pickDate:"Show tasks with this deadline",
+      addTask:"Add task", undo:"Undo", newTask:"New task", editTask:"Edit task",
+      task:"Task", taskPh:"What needs doing?", priorityLevel:"Priority level",
+      priorityNumber:"Priority number", oneMost:"(1 is most important)",
+      ofN:"of {n}", whenReopened:" (when reopened)",
+      deadlineDate:"Deadline date", tomorrow:"Tomorrow", nextWeek:"Next week", noDeadline:"No deadline",
+      section:"Section", optional:"(optional)", sectionPh:"e.g. Face-to-Face", notes:"Notes",
+      del:"Delete", cancel:"Cancel", close:"Close", saveChanges:"Save changes",
+      errTitle:"Type a name for the task.", errPast:"The deadline can’t be in the past. Pick today or a later date.",
+      sumTodo:"<b>{n}</b> to do", sumToday:"<b>{n}</b> due today", sumOverdue:"<b class=\"late\">{n} overdue</b>", allDone:"Everything is done",
+      signIn:"Sign in to Claude to see and edit the shared task list.",
+      viewOnlyNotice:"You can view this list, but not change it. Ask the owner for Contributor or Editor access.",
+      cantLoad:"The shared list couldn’t load here. Open this page from its claude.ai link.",
+      noPermission:"You don’t have permission to change this list. Ask the owner for Contributor or Editor access.",
+      syncShared:"Shared list. Changes show up for everyone.",
+      syncLost:"Lost connection to the shared list. Reload the page to reconnect.",
+      syncFail:"Couldn’t save that change. Check your connection and try again.",
+      deadlineL:"Deadline: {d}", overdueL:"Overdue: {d}", inDays:" (in {n} days)", daysLate:" ({n} days late)", dayLate:" (1 day late)",
+      tapSetDeadline:"Tap to set deadline", noDeadlineSet:"No deadline set", hasNotes:"Has notes", setLevel:"Set level",
+      changeDeadline:"Change deadline for {t}", setDeadlineFor:"Set deadline for {t}",
+      levelAria:"Priority level: {l}. Tap to change", notSet:"not set",
+      editAria:"Edit task {t}", markDone:"Mark done: {t}", markNotDone:"Mark not done: {t}", dragAria:"Drag to reorder {t}",
+      noLevelHere:"No {l} priority tasks here", tapAll:"Tap “All” to see every task.",
+      nothingToDo:"Nothing to do", tapAddOne:"Tap “Add task” to add one.", loading:"Loading tasks…",
+      nothingToday:"Nothing due today", nothingTodayP:"Tasks with today’s deadline, and any overdue tasks, show up here.",
+      noDateTasks:"No tasks on this date", noDateTasksP:"Pick another date, or set this date as a deadline on a task.",
+      noDone:"No finished tasks yet", noDoneP:"Tick the circle on a task when it’s done.",
+      todayHint:"Due today and overdue tasks. Numbers show each task’s place in the full list.",
+      deleteAllDone:"Delete all done tasks",
+      progress:"Progress", progressFor:"Progress for {d}", xOfY:"<b>{a}</b> of <b>{b}</b> tasks done",
+      noTasksDate:"No tasks have this deadline", overall:"Overall: <b>{a}</b> of <b>{b}</b> done ({p}%)",
+      showAll:"Show all tasks", finished7:"{n} finished in the last 7 days", pctDone:"{p}% of tasks done",
+      deadlines:"Deadlines", overdueTile:"Overdue", dueTodayTile:"Due today", next7Tile:"Due in next 7 days", noDeadlineTile:"No deadline set",
+      next14:"Next 14 days", legendDone:"Done", legendNot:"Not done", tapDay:"Tap a day to see its tasks",
+      dayAria:"{d}: {n} tasks, {x} done",
+      nextUp:"Next up", nothingLeft:"Nothing left to do.", recent:"Recently finished",
+      recentEmpty:"Tick a task when it’s done and it shows up here.", finishedOn:"Finished {d}",
+      taskDeleted:"Task deleted", nDoneDeleted:"{n} done tasks deleted",
+      translating:"Translating tasks…", trFail:"Task text couldn’t be translated here, so it shows in its original language.",
+      todayP:"Today, ", tomorrowP:"Tomorrow, ", yesterdayP:"Yesterday, "
+    },
+    si: {
+      langName:"සිංහල", localMode:"මෙම පිටපත වෙනස්කම් සුරකින්නේ මෙම උපාංගයේ පමණි. ඔබේ කණ්ඩායම සමඟ එකම සජීවී ලැයිස්තුවක් බෙදා ගැනීමට Firebase සම්බන්ධ කරන්න (README බලන්න).", viewLinkNotice:"බැලීමට පමණක් සබැඳිය: ඔබට කාර්යයන් සහ ප්‍රගතිය දැකිය හැකි නමුත් වෙනස් කළ නොහැක.", cantLoadStandalone:"හවුල් ලැයිස්තුවට සම්බන්ධ විය නොහැකි විය. Firebase සැකසුම් සහ ඔබේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කරන්න.", language:"භාෂාව", title:"මගේ කාර්යයන්",
+      todo:"කළ යුතු", today:"අද", byDate:"දිනය අනුව", done:"අවසන්",
+      dragHint:"පිළිවෙළ වෙනස් කිරීමට ⋮⋮ අදින්න", viewOnly:"බැලීමට පමණි", level:"මට්ටම:", all:"සියල්ල",
+      high:"ඉහළ", medium:"මධ්‍යම", low:"අඩු",
+      prevDay:"පෙර දිනය", nextDay:"ඊළඟ දිනය", pickDate:"මෙම අවසන් දිනය සහිත කාර්යයන් පෙන්වන්න",
+      addTask:"කාර්යයක් එක් කරන්න", undo:"අහෝසි කරන්න", newTask:"නව කාර්යය", editTask:"කාර්යය සංස්කරණය",
+      task:"කාර්යය", taskPh:"කළ යුත්තේ කුමක්ද?", priorityLevel:"ප්‍රමුඛතා මට්ටම",
+      priorityNumber:"ප්‍රමුඛතා අංකය", oneMost:"(1 වඩාත්ම වැදගත්)",
+      ofN:"{n} අතරින්", whenReopened:" (නැවත විවෘත කළ විට)",
+      deadlineDate:"අවසන් දිනය", tomorrow:"හෙට", nextWeek:"ලබන සතිය", noDeadline:"අවසන් දිනයක් නැත",
+      section:"කොටස", optional:"(අත්‍යවශ්‍ය නොවේ)", sectionPh:"උදා: Face-to-Face", notes:"සටහන්",
+      del:"මකන්න", cancel:"අවලංගු කරන්න", close:"වසන්න", saveChanges:"වෙනස්කම් සුරකින්න",
+      errTitle:"කාර්යය සඳහා නමක් ඇතුළත් කරන්න.", errPast:"අවසන් දිනය අතීත දිනයක් විය නොහැක. අද හෝ පසු දිනයක් තෝරන්න.",
+      sumTodo:"කළ යුතු <b>{n}</b>", sumToday:"අද නියමිත <b>{n}</b>", sumOverdue:"<b class=\"late\">කල් ඉකුත් {n}</b>", allDone:"සියල්ල අවසන්",
+      signIn:"හවුල් කාර්ය ලැයිස්තුව බැලීමට සහ සංස්කරණය කිරීමට Claude වෙත පුරනය වන්න.",
+      viewOnlyNotice:"ඔබට මෙම ලැයිස්තුව බැලිය හැකි නමුත් වෙනස් කළ නොහැක. Contributor හෝ Editor ප්‍රවේශය සඳහා හිමිකරුගෙන් ඉල්ලන්න.",
+      cantLoad:"හවුල් ලැයිස්තුව මෙහි පූරණය කළ නොහැකි විය. මෙම පිටුව එහි claude.ai සබැඳියෙන් විවෘත කරන්න.",
+      noPermission:"මෙම ලැයිස්තුව වෙනස් කිරීමට ඔබට අවසර නැත. Contributor හෝ Editor ප්‍රවේශය සඳහා හිමිකරුගෙන් ඉල්ලන්න.",
+      syncShared:"හවුල් ලැයිස්තුව. වෙනස්කම් සැමට පෙනේ.",
+      syncLost:"හවුල් ලැයිස්තුවට සම්බන්ධතාවය නැති විය. නැවත සම්බන්ධ වීමට පිටුව නැවත පූරණය කරන්න.",
+      syncFail:"එම වෙනස සුරැකීමට නොහැකි විය. ඔබගේ සම්බන්ධතාවය පරීක්ෂා කර නැවත උත්සාහ කරන්න.",
+      deadlineL:"අවසන් දිනය: {d}", overdueL:"කල් ඉකුත්: {d}", inDays:" (දින {n} කින්)", daysLate:" (දින {n} ක් ප්‍රමාදයි)", dayLate:" (දින 1 ක් ප්‍රමාදයි)",
+      tapSetDeadline:"අවසන් දිනය සැකසීමට තට්ටු කරන්න", noDeadlineSet:"අවසන් දිනයක් සකසා නැත", hasNotes:"සටහන් ඇත", setLevel:"මට්ටම සකසන්න",
+      changeDeadline:"{t} සඳහා අවසන් දිනය වෙනස් කරන්න", setDeadlineFor:"{t} සඳහා අවසන් දිනය සකසන්න",
+      levelAria:"ප්‍රමුඛතා මට්ටම: {l}. වෙනස් කිරීමට තට්ටු කරන්න", notSet:"සකසා නැත",
+      editAria:"කාර්යය සංස්කරණය කරන්න: {t}", markDone:"අවසන් ලෙස සලකුණු කරන්න: {t}", markNotDone:"අවසන් නැති ලෙස සලකුණු කරන්න: {t}", dragAria:"පිළිවෙළ වෙනස් කිරීමට අදින්න: {t}",
+      noLevelHere:"මෙහි {l} ප්‍රමුඛතා කාර්යයන් නැත", tapAll:"සියලු කාර්යයන් බැලීමට “සියල්ල” තට්ටු කරන්න.",
+      nothingToDo:"කළ යුතු කිසිවක් නැත", tapAddOne:"එකක් එක් කිරීමට “කාර්යයක් එක් කරන්න” තට්ටු කරන්න.", loading:"කාර්යයන් පූරණය වෙමින්…",
+      nothingToday:"අද නියමිත කිසිවක් නැත", nothingTodayP:"අද අවසන් දිනය ඇති කාර්යයන් සහ කල් ඉකුත් වූ කාර්යයන් මෙහි පෙන්වයි.",
+      noDateTasks:"මෙම දිනයට කාර්යයන් නැත", noDateTasksP:"වෙනත් දිනයක් තෝරන්න, නැතහොත් කාර්යයකට මෙම දිනය අවසන් දිනය ලෙස සකසන්න.",
+      noDone:"තවම අවසන් කළ කාර්යයන් නැත", noDoneP:"කාර්යයක් අවසන් වූ විට එහි රවුම සලකුණු කරන්න.",
+      todayHint:"අද නියමිත සහ කල් ඉකුත් වූ කාර්යයන්. අංක මඟින් සම්පූර්ණ ලැයිස්තුවේ එක් එක් කාර්යයේ ස්ථානය පෙන්වයි.",
+      deleteAllDone:"අවසන් කළ සියලු කාර්යයන් මකන්න",
+      progress:"ප්‍රගතිය", progressFor:"{d} සඳහා ප්‍රගතිය", xOfY:"කාර්යයන් <b>{b}</b> න් <b>{a}</b> ක් අවසන්",
+      noTasksDate:"මෙම අවසන් දිනය සහිත කාර්යයන් නැත", overall:"සමස්තය: <b>{b}</b> න් <b>{a}</b> ක් අවසන් ({p}%)",
+      showAll:"සියලු කාර්යයන් පෙන්වන්න", finished7:"පසුගිය දින 7 තුළ {n} ක් අවසන් කළා", pctDone:"කාර්යයන්ගෙන් {p}% ක් අවසන්",
+      deadlines:"අවසන් දින", overdueTile:"කල් ඉකුත්", dueTodayTile:"අද නියමිත", next7Tile:"ඉදිරි දින 7 තුළ නියමිත", noDeadlineTile:"අවසන් දිනයක් සකසා නැත",
+      next14:"ඉදිරි දින 14", legendDone:"අවසන්", legendNot:"අවසන් නැත", tapDay:"එදින කාර්යයන් බැලීමට දිනයක් තට්ටු කරන්න",
+      dayAria:"{d}: කාර්යයන් {n}, අවසන් {x}",
+      nextUp:"ඊළඟට", nothingLeft:"කිරීමට කිසිවක් ඉතිරි නැත.", recent:"මෑතකදී අවසන් කළ",
+      recentEmpty:"කාර්යයක් අවසන් වූ විට එය සලකුණු කරන්න, එවිට එය මෙහි පෙන්වයි.", finishedOn:"අවසන් කළේ {d}",
+      taskDeleted:"කාර්යය මකා දැමිණි", nDoneDeleted:"අවසන් කළ කාර්යයන් {n} ක් මකා දැමිණි",
+      translating:"කාර්යයන් පරිවර්තනය වෙමින්…", trFail:"කාර්ය පෙළ මෙහි පරිවර්තනය කළ නොහැකි විය, එබැවින් එය මුල් භාෂාවෙන් පෙන්වයි.",
+      todayP:"අද, ", tomorrowP:"හෙට, ", yesterdayP:"ඊයේ, "
+    },
+    ta: {
+      langName:"தமிழ்", localMode:"இந்தப் பிரதி மாற்றங்களை இந்தச் சாதனத்தில் மட்டுமே சேமிக்கிறது. உங்கள் குழுவுடன் ஒரே நேரலைப் பட்டியலைப் பகிர Firebase ஐ இணைக்கவும் (README ஐப் பார்க்கவும்).", viewLinkNotice:"பார்வைக்கு மட்டும் இணைப்பு: பணிகளையும் முன்னேற்றத்தையும் பார்க்கலாம், ஆனால் மாற்ற முடியாது.", cantLoadStandalone:"பகிரப்பட்ட பட்டியலுடன் இணைக்க முடியவில்லை. Firebase அமைப்புகளையும் இணைய இணைப்பையும் சரிபார்க்கவும்.", language:"மொழி", title:"எனது பணிகள்",
+      todo:"செய்ய வேண்டியவை", today:"இன்று", byDate:"தேதி வாரியாக", done:"முடிந்தவை",
+      dragHint:"வரிசையை மாற்ற ⋮⋮ ஐ இழுக்கவும்", viewOnly:"பார்வைக்கு மட்டும்", level:"நிலை:", all:"அனைத்தும்",
+      high:"உயர்", medium:"நடுத்தர", low:"குறைந்த",
+      prevDay:"முந்தைய நாள்", nextDay:"அடுத்த நாள்", pickDate:"இந்தக் காலக்கெடு உள்ள பணிகளைக் காட்டு",
+      addTask:"பணியைச் சேர்", undo:"செயல்தவிர்", newTask:"புதிய பணி", editTask:"பணியைத் திருத்து",
+      task:"பணி", taskPh:"என்ன செய்ய வேண்டும்?", priorityLevel:"முன்னுரிமை நிலை",
+      priorityNumber:"முன்னுரிமை எண்", oneMost:"(1 மிக முக்கியமானது)",
+      ofN:"{n} இல்", whenReopened:" (மீண்டும் திறக்கும்போது)",
+      deadlineDate:"காலக்கெடு தேதி", tomorrow:"நாளை", nextWeek:"அடுத்த வாரம்", noDeadline:"காலக்கெடு இல்லை",
+      section:"பிரிவு", optional:"(விருப்பத்தேர்வு)", sectionPh:"எ.கா. Face-to-Face", notes:"குறிப்புகள்",
+      del:"நீக்கு", cancel:"ரத்துசெய்", close:"மூடு", saveChanges:"மாற்றங்களைச் சேமி",
+      errTitle:"பணிக்கு ஒரு பெயரை உள்ளிடவும்.", errPast:"காலக்கெடு கடந்த தேதியாக இருக்க முடியாது. இன்று அல்லது பிந்தைய தேதியைத் தேர்ந்தெடுக்கவும்.",
+      sumTodo:"செய்ய வேண்டியவை <b>{n}</b>", sumToday:"இன்று முடிக்க வேண்டியவை <b>{n}</b>", sumOverdue:"<b class=\"late\">காலம் கடந்தவை {n}</b>", allDone:"அனைத்தும் முடிந்தது",
+      signIn:"பகிரப்பட்ட பணிப் பட்டியலைப் பார்க்கவும் திருத்தவும் Claude இல் உள்நுழையவும்.",
+      viewOnlyNotice:"இந்தப் பட்டியலைப் பார்க்கலாம், ஆனால் மாற்ற முடியாது. Contributor அல்லது Editor அணுகலுக்கு உரிமையாளரிடம் கேளுங்கள்.",
+      cantLoad:"பகிரப்பட்ட பட்டியலை இங்கே ஏற்ற முடியவில்லை. இந்தப் பக்கத்தை அதன் claude.ai இணைப்பிலிருந்து திறக்கவும்.",
+      noPermission:"இந்தப் பட்டியலை மாற்ற உங்களுக்கு அனுமதி இல்லை. Contributor அல்லது Editor அணுகலுக்கு உரிமையாளரிடம் கேளுங்கள்.",
+      syncShared:"பகிரப்பட்ட பட்டியல். மாற்றங்கள் அனைவருக்கும் தெரியும்.",
+      syncLost:"பகிரப்பட்ட பட்டியலுடனான இணைப்பு துண்டிக்கப்பட்டது. மீண்டும் இணைக்க பக்கத்தை மீண்டும் ஏற்றவும்.",
+      syncFail:"அந்த மாற்றத்தைச் சேமிக்க முடியவில்லை. உங்கள் இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+      deadlineL:"காலக்கெடு: {d}", overdueL:"காலம் கடந்தது: {d}", inDays:" ({n} நாட்களில்)", daysLate:" ({n} நாட்கள் தாமதம்)", dayLate:" (1 நாள் தாமதம்)",
+      tapSetDeadline:"காலக்கெடுவை அமைக்கத் தட்டவும்", noDeadlineSet:"காலக்கெடு அமைக்கப்படவில்லை", hasNotes:"குறிப்புகள் உள்ளன", setLevel:"நிலையை அமை",
+      changeDeadline:"{t} இன் காலக்கெடுவை மாற்று", setDeadlineFor:"{t} க்குக் காலக்கெடுவை அமை",
+      levelAria:"முன்னுரிமை நிலை: {l}. மாற்றத் தட்டவும்", notSet:"அமைக்கப்படவில்லை",
+      editAria:"பணியைத் திருத்து: {t}", markDone:"முடிந்ததாகக் குறி: {t}", markNotDone:"முடியவில்லை எனக் குறி: {t}", dragAria:"வரிசையை மாற்ற இழுக்கவும்: {t}",
+      noLevelHere:"இங்கே {l} முன்னுரிமைப் பணிகள் இல்லை", tapAll:"எல்லாப் பணிகளையும் பார்க்க “அனைத்தும்” என்பதைத் தட்டவும்.",
+      nothingToDo:"செய்ய எதுவும் இல்லை", tapAddOne:"ஒன்றைச் சேர்க்க “பணியைச் சேர்” என்பதைத் தட்டவும்.", loading:"பணிகள் ஏற்றப்படுகின்றன…",
+      nothingToday:"இன்று முடிக்க வேண்டியது எதுவும் இல்லை", nothingTodayP:"இன்றைய காலக்கெடு உள்ள பணிகளும் காலம் கடந்த பணிகளும் இங்கே காட்டப்படும்.",
+      noDateTasks:"இந்தத் தேதியில் பணிகள் இல்லை", noDateTasksP:"வேறு தேதியைத் தேர்ந்தெடுக்கவும், அல்லது ஒரு பணிக்கு இந்தத் தேதியைக் காலக்கெடுவாக அமைக்கவும்.",
+      noDone:"இன்னும் முடிந்த பணிகள் இல்லை", noDoneP:"பணி முடிந்ததும் அதன் வட்டத்தைத் தட்டவும்.",
+      todayHint:"இன்று முடிக்க வேண்டியவை மற்றும் காலம் கடந்த பணிகள். எண்கள் முழுப் பட்டியலில் ஒவ்வொரு பணியின் இடத்தைக் காட்டுகின்றன.",
+      deleteAllDone:"முடிந்த எல்லாப் பணிகளையும் நீக்கு",
+      progress:"முன்னேற்றம்", progressFor:"{d} க்கான முன்னேற்றம்", xOfY:"<b>{b}</b> பணிகளில் <b>{a}</b> முடிந்தன",
+      noTasksDate:"இந்தக் காலக்கெடுவுடன் பணிகள் இல்லை", overall:"மொத்தம்: <b>{b}</b> இல் <b>{a}</b> முடிந்தன ({p}%)",
+      showAll:"எல்லாப் பணிகளையும் காட்டு", finished7:"கடந்த 7 நாட்களில் {n} முடிந்தன", pctDone:"{p}% பணிகள் முடிந்தன",
+      deadlines:"காலக்கெடுக்கள்", overdueTile:"காலம் கடந்தவை", dueTodayTile:"இன்று முடிக்க வேண்டியவை", next7Tile:"அடுத்த 7 நாட்களில்", noDeadlineTile:"காலக்கெடு இல்லை",
+      next14:"அடுத்த 14 நாட்கள்", legendDone:"முடிந்தது", legendNot:"முடியவில்லை", tapDay:"அந்நாளின் பணிகளைப் பார்க்க ஒரு நாளைத் தட்டவும்",
+      dayAria:"{d}: {n} பணிகள், {x} முடிந்தன",
+      nextUp:"அடுத்தது", nothingLeft:"செய்ய எதுவும் மீதம் இல்லை.", recent:"சமீபத்தில் முடிந்தவை",
+      recentEmpty:"பணி முடிந்ததும் அதைக் குறியிடுங்கள், அது இங்கே தோன்றும்.", finishedOn:"முடிந்தது {d}",
+      taskDeleted:"பணி நீக்கப்பட்டது", nDoneDeleted:"முடிந்த {n} பணிகள் நீக்கப்பட்டன",
+      translating:"பணிகள் மொழிபெயர்க்கப்படுகின்றன…", trFail:"பணி உரையை இங்கே மொழிபெயர்க்க முடியவில்லை, எனவே அது அசல் மொழியில் காட்டப்படுகிறது.",
+      todayP:"இன்று, ", tomorrowP:"நாளை, ", yesterdayP:"நேற்று, "
+    }
+  };
+
+  const LOCALES = {en:"en-US", si:"si-LK", ta:"ta-LK"};
+  const LANG_KEY = "mytasks.lang";
+  let lang = "en";
+  try{ const l = localStorage.getItem(LANG_KEY); if(I18N[l]) lang = l; }catch(e){}
+  function T(k, p){
+    let s = (I18N[lang] && I18N[lang][k]) || I18N.en[k] || k;
+    if(p) for(const x in p) s = s.split("{"+x+"}").join(p[x]);
+    return s;
+  }
+  function LOC(){ return LOCALES[lang] || undefined; }
+  function applyStatic(){
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(el=>{ el.textContent = T(el.dataset.t); });
+    document.querySelectorAll("[data-tph]").forEach(el=>{ el.placeholder = T(el.dataset.tph); });
+    document.querySelectorAll("[data-taria]").forEach(el=>{ el.setAttribute("aria-label", T(el.dataset.taria)); });
+    document.querySelector("#langSel").value = lang;
+    document.querySelector("#langSel").setAttribute("aria-label", T("language"));
+    document.querySelector("#todayLine").textContent = new Date().toLocaleDateString(LOC(),{weekday:"long", day:"numeric", month:"long"});
+  }
+
+  /* ---------- translating task text (titles, sections, notes) ---------- */
+  const TR_KEY = "mytasks.tr.v1";
+  let trCache = {};
+  try{ trCache = JSON.parse(localStorage.getItem(TR_KEY) || "{}") || {}; }catch(e){ trCache = {}; }
+  const trQueue = new Set();
+  const trFailed = {}, trTries = {};
+  let trBusy = false, samplerP = null, trTimer = null;
+  function TX(s){
+    if(!s || lang==="en") return s;
+    const c = trCache[lang] && trCache[lang][s];
+    if(c) return c;
+    if(!trFailed[lang]) trQueue.add(s);
+    return s;
+  }
+  /* stored translations travel with each task (shared with everyone); live translation is the fallback */
+  function TXF(t, f){
+    const v = t[f];
+    if(!v || lang==="en") return v;
+    const e = t.tr && t.tr[lang] && t.tr[lang][f];
+    if(Array.isArray(e) && e[0]===v && e[1]) return e[1];
+    return TX(v);
+  }
+  function writeBackTranslations(target){
+    if(!col || !canWrite) return;
+    const c = trCache[target] || {};
+    tasks.forEach(t=>{
+      const cur = (t.tr && t.tr[target]) || {};
+      const next = Object.assign({}, cur); let changed = false;
+      ["title","category","notes"].forEach(f=>{
+        const v = t[f]; if(!v) return;
+        const e = cur[f]; if(Array.isArray(e) && e[0]===v) return;
+        if(c[v] && c[v]!==v){ next[f] = [v, c[v]]; changed = true; }
+      });
+      if(changed){
+        const tr = Object.assign({}, t.tr || {}, {[target]: next});
+        t.tr = tr;
+        col.doc(t.id).update({tr}).catch(()=>{});
+      }
+    });
+  }
+  function setTrStatus(msg){ const el = document.querySelector("#trStatus"); el.textContent = msg || ""; el.hidden = !msg; }
+  function getSampler(){
+    if(!samplerP) samplerP = (window.claude && window.claude.use) ? window.claude.use("sample").catch(()=>null) : Promise.resolve(null);
+    return samplerP;
+  }
+  function scheduleTranslate(){ if(trQueue.size && !trBusy){ clearTimeout(trTimer); trTimer = setTimeout(runTranslate, 60); } }
+  async function runTranslate(){
+    if(trBusy || !trQueue.size || lang==="en") return;
+    const target = lang;
+    const items = [...trQueue].slice(0, 60);
+    trBusy = true; setTrStatus(T("translating"));
+    let ok = false;
+    try{
+      const sample = await getSampler();
+      if(!sample){ trFailed[target] = true; trQueue.clear(); trBusy = false; setTrStatus(""); return; }
+      const langName = target==="si" ? "Sinhala" : "Tamil";
+      const prompt = "You translate short task-list text for a mobile app.\n" +
+        "Translate each string in the JSON array below into " + langName + ".\n" +
+        "Rules: keep product and brand names unchanged (for example U2Me, You2Mi, Stripe, Zoom, Google Meet, Microsoft Teams, Outlook, Google Calendar, Google Sign-In, OAuth, UI, PTT, Face-to-Face, Agent Mode). " +
+        "If a string is already in " + langName + ", return it unchanged. Keep each translation short and natural.\n" +
+        "Respond with ONLY a JSON array of strings, with exactly " + items.length + " items, in the same order. No other text.\n\n" +
+        JSON.stringify(items);
+      const res = await sample.json(prompt, {modelTier:"quick"});
+      if(!Array.isArray(res) || res.length !== items.length) throw new Error("bad result");
+      trCache[target] = trCache[target] || {};
+      items.forEach((s,i)=>{ trCache[target][s] = (typeof res[i]==="string" && res[i].trim()) ? res[i].trim() : s; });
+      try{ localStorage.setItem(TR_KEY, JSON.stringify(trCache)); }catch(e){}
+      ok = true;
+      writeBackTranslations(target);
+    }catch(e){
+      trTries[target] = (trTries[target]||0) + 1;
+      if(trTries[target] >= 2) trFailed[target] = true;
+    }finally{
+      items.forEach(s=>trQueue.delete(s));
+      trBusy = false;
+    }
+    if(lang !== target) return;
+    if(!ok){
+      if(!trFailed[target]){ setTimeout(()=>{ if(lang===target) render(); }, 1500); return; }
+      trQueue.clear(); setTrStatus(T("trFail")); render(); return;
+    }
+    setTrStatus("");
+    render();
+  }
+  function setLang(l){
+    if(!I18N[l]) return;
+    lang = l;
+    try{ localStorage.setItem(LANG_KEY, l); }catch(e){}
+    trQueue.clear(); setTrStatus(""); trFailed[l] = false; trTries[l] = 0;
+    if(noticeKey) notice(T(noticeKey));
+    if(syncKey) setSync(T(syncKey));
+    applyStatic(); applyPermissions(); render();
+    if(editingId !== null || document.querySelector("#sheet").classList.contains("open")) refreshSheetText();
+  }
+  const LV = {get high(){return T("high")}, get medium(){return T("medium")}, get low(){return T("low")}};
+  let filterDate = "";
+
+  const $ = s => document.querySelector(s);
+  const ord = t => (typeof t.order === "number" ? t.order : (t.created || 0));
+
+  function todayStr(offset){
+    const d = new Date(); d.setDate(d.getDate() + (offset||0));
+    return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  }
+  function fmtDate(s){
+    if(!s) return "";
+    const t = todayStr(0), tm = todayStr(1), y = todayStr(-1);
+    const [Y,M,D] = s.split("-").map(Number);
+    const full = new Date(Y, M-1, D).toLocaleDateString(LOC(), {weekday:"short", day:"numeric", month:"short", year:"numeric"});
+    if(s===t) return T("todayP")+full; if(s===tm) return T("tomorrowP")+full; if(s===y) return T("yesterdayP")+full;
+    return full;
+  }
+  function fmtTime(s){
+    if(!s) return "";
+    const [h,m] = s.split(":").map(Number);
+    const d = new Date(); d.setHours(h,m,0,0);
+    return d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+  }
+  function esc(s){ const d=document.createElement("div"); d.textContent=s==null?"":String(s); return d.innerHTML.replace(/"/g,"&quot;"); }
+  let noticeKey = "", syncKey = "";
+  function noticeK(k){ noticeKey = k; notice(T(k)); }
+  function syncK(k){ syncKey = k; setSync(T(k)); }
+  function notice(t){ const n=$("#notice"); n.textContent=t||""; n.hidden=!t; }
+  function setSync(t){ $("#sync").textContent = t; }
+  function newId(){ return "t"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+  function openTasks(){ return tasks.filter(t=>!t.done).sort((a,b)=>ord(a)-ord(b)); }
+  function doneTasks(){ return tasks.filter(t=>t.done).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0)); }
+
+  /* order value that puts a task at index `idx` (0-based) of list `arr` (which excludes the task) */
+  function orderAt(arr, idx){
+    if(!arr.length) return 1;
+    if(idx <= 0) return ord(arr[0]) - 1;
+    if(idx >= arr.length) return ord(arr[arr.length-1]) + 1;
+    return (ord(arr[idx-1]) + ord(arr[idx])) / 2;
+  }
+
+  /* ---------- storage ---------- */
+  function cacheSave(){ try{ localStorage.setItem(CACHE_KEY, JSON.stringify(tasks)); }catch(e){} }
+  function cacheLoad(){ try{ const r=localStorage.getItem(CACHE_KEY); return r?JSON.parse(r):null; }catch(e){ return null; } }
+
+  function applyPermissions(){
+    $("#addBtn").hidden = !canWrite;
+    $("#hint").textContent = canWrite ? T("dragHint") : T("viewOnly");
+  }
+
+  /* tasks as they were when this copy was made; used to fill an empty list the first time */
+  const STARTER_TASKS = [{"category": "General & Website", "created": 1, "date": "2026-10-30", "done": false, "doneAt": null, "notes": "", "order": 1, "priority": "high", "time": "", "title": "Go straight to the Dashboard after the Home screen ( Web site )", "tr": {"si": {"category": ["General & Website", "සාමාන්‍ය සහ වෙබ් අඩවිය"], "title": ["Go straight to the Dashboard after the Home screen ( Web site )", "මුල් තිරයෙන් පසු කෙලින්ම Dashboard වෙත යන්න (වෙබ් අඩවිය)"]}, "ta": {"category": ["General & Website", "பொது மற்றும் இணையதளம்"], "title": ["Go straight to the Dashboard after the Home screen ( Web site )", "முகப்புத் திரைக்குப் பிறகு நேரடியாக Dashboard க்குச் செல்லவும் (இணையதளம்)"]}}, "id": "t01"}, {"category": "General & Website", "created": 2, "date": "2026-10-30", "done": false, "doneAt": null, "notes": "", "order": 2, "priority": "low", "time": "", "title": "Add the brand logo to every screen header", "tr": {"si": {"category": ["General & Website", "සාමාන්‍ය සහ වෙබ් අඩවිය"], "title": ["Add the brand logo to every screen header", "සෑම තිරයකම ශීර්ෂයට සන්නාම ලාංඡනය එක් කරන්න"]}, "ta": {"category": ["General & Website", "பொது மற்றும் இணையதளம்"], "title": ["Add the brand logo to every screen header", "ஒவ்வொரு திரையின் தலைப்பிலும் பிராண்ட் லோகோவைச் சேர்க்கவும்"]}}, "id": "t02"}, {"category": "General & Website", "created": 3, "date": "2026-10-30", "done": false, "notes": "", "priority": "low", "time": "", "title": "Add admin panel logo branding and settings", "tr": {"si": {"category": ["General & Website", "සාමාන්‍ය සහ වෙබ් අඩවිය"], "title": ["Add admin panel logo branding and settings", "පරිපාලක පැනලයට ලාංඡන සන්නාමකරණය සහ සැකසුම් එක් කරන්න"]}, "ta": {"category": ["General & Website", "பொது மற்றும் இணையதளம்"], "title": ["Add admin panel logo branding and settings", "நிர்வாகப் பலகத்திற்கு லோகோ பிராண்டிங் மற்றும் அமைப்புகளைச் சேர்க்கவும்"]}}, "id": "t03"}, {"category": "General & Website", "created": 4, "date": "2026-10-30", "done": false, "notes": "", "priority": "high", "time": "", "title": "Integrate Stripe as the default payment provider", "tr": {"si": {"category": ["General & Website", "සාමාන්‍ය සහ වෙබ් අඩවිය"], "title": ["Integrate Stripe as the default payment provider", "Stripe පෙරනිමි ගෙවීම් සපයන්නා ලෙස ඒකාබද්ධ කරන්න"]}, "ta": {"category": ["General & Website", "பொது மற்றும் இணையதளம்"], "title": ["Integrate Stripe as the default payment provider", "Stripe ஐ இயல்புநிலை கட்டண வழங்குநராக ஒருங்கிணைக்கவும்"]}}, "id": "t04"}, {"category": "Face-to-Face", "created": 5, "date": "2026-10-30", "done": false, "notes": "", "order": 11.5, "priority": "medium", "time": "", "title": "Improve color balance and contrast (Dark Mode )", "tr": {"si": {"category": ["Face-to-Face", "Face-to-Face"], "title": ["Improve color balance and contrast (Dark Mode )", "වර්ණ සමතුලිතතාවය සහ contrast වැඩි දියුණු කරන්න (Dark Mode)"]}, "ta": {"category": ["Face-to-Face", "Face-to-Face"], "title": ["Improve color balance and contrast (Dark Mode )", "வண்ணச் சமநிலை மற்றும் கான்ட்ராஸ்டை மேம்படுத்தவும் (Dark Mode)"]}}, "id": "t05"}, {"category": "Face-to-Face", "created": 7, "date": "2026-10-30", "done": false, "notes": "Bottom or header icons for clean navigation.", "priority": "high", "time": "", "title": "Mobile App Changes All", "tr": {"si": {"category": ["Face-to-Face", "Face-to-Face"], "notes": ["Bottom or header icons for clean navigation.", "පිරිසිදු සංචාලනය සඳහා පහළ හෝ ශීර්ෂ අයිකන."], "title": ["Mobile App Changes", "ජංගම යෙදුමේ වෙනස්කම්"]}, "ta": {"category": ["Face-to-Face", "Face-to-Face"], "notes": ["Bottom or header icons for clean navigation.", "சுத்தமான வழிசெலுத்தலுக்கு கீழ் அல்லது தலைப்பு ஐகான்கள்."], "title": ["Mobile App Changes", "மொபைல் செயலி மாற்றங்கள்"]}}, "id": "t07"}, {"category": "Face-to-Face", "created": 8, "date": "2026-10-30", "done": false, "notes": "", "priority": "high", "time": "", "title": "Add Manual Toggle Button To Translation", "tr": {"si": {"category": ["Face-to-Face", "Face-to-Face"], "title": ["Add Manual Toggle Button", "අතින් මාරු කිරීමේ (toggle) බොත්තමක් එක් කරන්න"]}, "ta": {"category": ["Face-to-Face", "Face-to-Face"], "title": ["Add Manual Toggle Button", "கைமுறை மாற்று (toggle) பொத்தானைச் சேர்க்கவும்"]}}, "id": "t08"}, {"category": "Face-to-Face", "created": 9, "date": "2026-10-30", "done": false, "notes": "", "order": 8.25, "priority": "medium", "time": "", "title": "Add audio output switcher (headset / speaker)", "tr": {"si": {"category": ["Face-to-Face", "Face-to-Face"], "title": ["Add audio output switcher (headset / speaker)", "ශ්‍රව්‍ය ප්‍රතිදාන මාරුකරුවක් එක් කරන්න (හෙඩ්සෙට් / ස්පීකරය)"]}, "ta": {"category": ["Face-to-Face", "Face-to-Face"], "title": ["Add audio output switcher (headset / speaker)", "ஒலி வெளியீட்டு மாற்றியைச் சேர்க்கவும் (ஹெட்செட் / ஸ்பீக்கர்)"]}}, "id": "t09"}, {"category": "Face-to-Face", "created": 10, "date": "2026-10-30", "done": false, "notes": "", "priority": "high", "time": "", "title": "Fix issue in mobile web view language selection", "tr": {"si": {"category": ["Face-to-Face", "Face-to-Face"], "title": ["Fix issue in mobile web view language selection", "ජංගම වෙබ් දසුනේ භාෂා තේරීමේ ගැටලුව නිවැරදි කරන්න"]}, "ta": {"category": ["Face-to-Face", "Face-to-Face"], "title": ["Fix issue in mobile web view language selection", "மொபைல் வலைக் காட்சியில் மொழித் தேர்வுச் சிக்கலைச் சரிசெய்யவும்"]}}, "id": "t10"}, {"category": "Push-to-Talk", "created": 13, "date": "2026-10-30", "done": false, "notes": "", "priority": "medium", "time": "", "title": "Build “Tap to speak / Push to talk” with clear UI feedback ( Mobile App )", "tr": {"si": {"category": ["Push-to-Talk", "Push-to-Talk"], "title": ["Build “Tap to speak / Push to talk” with clear UI feedback ( Mobile App )", "පැහැදිලි UI ප්‍රතිචාර සහිතව “කතා කිරීමට තට්ටු කරන්න / Push to talk” සාදන්න (ජංගම යෙදුම)"]}, "ta": {"category": ["Push-to-Talk", "Push-to-Talk"], "title": ["Build “Tap to speak / Push to talk” with clear UI feedback ( Mobile App )", "தெளிவான UI பின்னூட்டத்துடன் “பேசத் தட்டவும் / Push to talk” ஐ உருவாக்கவும் (மொபைல் செயலி)"]}}, "id": "t13"}, {"category": "Push-to-Talk", "created": 14, "date": "2026-10-30", "done": false, "notes": "", "order": 10.75, "priority": "high", "time": "", "title": "Clear icon and mic color change for active vs. muted", "tr": {"si": {"category": ["Push-to-Talk", "Push-to-Talk"], "title": ["Clear icon and mic color change for active vs. muted", "සක්‍රිය සහ නිහඬ තත්ත්ව සඳහා පැහැදිලි අයිකනය සහ මයික් වර්ණ වෙනස"]}, "ta": {"category": ["Push-to-Talk", "Push-to-Talk"], "title": ["Clear icon and mic color change for active vs. muted", "செயலில் / ஒலியடக்க நிலைகளுக்கு தெளிவான ஐகான் மற்றும் மைக் நிற மாற்றம்"]}}, "id": "t14"}, {"category": "Conversation Screen", "created": 15, "date": "2026-10-30", "done": false, "notes": "", "order": 11.125, "priority": "high", "time": "", "title": "Copy individual chat messages", "tr": {"si": {"category": ["Conversation Screen", "සංවාද තිරය"], "title": ["Copy individual chat messages", "තනි කතාබස් පණිවිඩ පිටපත් කරන්න"]}, "ta": {"category": ["Conversation Screen", "உரையாடல் திரை"], "title": ["Copy individual chat messages", "தனிப்பட்ட அரட்டைச் செய்திகளை நகலெடுக்கவும்"]}}, "id": "t15"}, {"category": "Conversation Screen", "created": 16, "date": "2026-10-30", "done": false, "notes": "", "order": 11.3125, "priority": "high", "time": "", "title": "Add one-click “Copy full conversation”", "tr": {"si": {"category": ["Conversation Screen", "සංවාද තිරය"], "title": ["Add one-click “Copy full conversation”", "එක් ක්ලික් කිරීමකින් “සම්පූර්ණ සංවාදය පිටපත් කරන්න” එක් කරන්න"]}, "ta": {"category": ["Conversation Screen", "உரையாடல் திரை"], "title": ["Add one-click “Copy full conversation”", "ஒரே கிளிக்கில் “முழு உரையாடலையும் நகலெடு” வசதியைச் சேர்க்கவும்"]}}, "id": "t16"}, {"category": "Conversation Screen", "created": 17, "date": "2026-10-30", "done": false, "notes": "", "order": 11.40625, "priority": "medium", "time": "", "title": "Real-time editing transcript | Ask “Proceed” or “Discard” before finalizing edits", "tr": {"si": {"category": ["Conversation Screen", "සංවාද තිරය"], "title": ["Real-time editing transcript | Ask “Proceed” or “Discard” before finalizing edits", "තත්‍ය කාලීන පිටපත් සංස්කරණය | සංස්කරණ අවසන් කිරීමට පෙර “ඉදිරියට” හෝ “ඉවත ලන්න” ලෙස අසන්න"]}, "ta": {"category": ["Conversation Screen", "உரையாடல் திரை"], "title": ["Real-time editing transcript | Ask “Proceed” or “Discard” before finalizing edits", "நிகழ்நேர டிரான்ஸ்கிரிப்ட் திருத்தம் | திருத்தங்களை இறுதி செய்வதற்கு முன் “தொடர்” அல்லது “நிராகரி” எனக் கேட்கவும்"]}}, "id": "t17"}, {"category": "Translate", "created": 22, "date": "", "done": true, "doneAt": 1793014806245, "notes": "", "priority": "medium", "time": "", "title": "Add real-time screen sharing during translation", "tr": {"si": {"category": ["Translate", "පරිවර්තනය"], "title": ["Add real-time screen sharing during translation", "පරිවර්තනය අතරතුර තත්‍ය කාලීන තිර බෙදාගැනීම එක් කරන්න"]}, "ta": {"category": ["Translate", "மொழிபெயர்ப்பு"], "title": ["Add real-time screen sharing during translation", "மொழிபெயர்ப்பின்போது நிகழ்நேரத் திரைப் பகிர்வைச் சேர்க்கவும்"]}}, "id": "t22"}, {"category": "Live Stream", "created": 23, "date": "2026-11-10", "done": false, "notes": "", "priority": "medium", "time": "", "title": "Storage Translation History", "tr": {"si": {"category": ["Live Stream", "සජීවී විකාශය"], "title": ["Storage Translation History", "පරිවර්තන ඉතිහාසය ගබඩා කිරීම"]}, "ta": {"category": ["Live Stream", "நேரலை ஒளிபரப்பு"], "title": ["Storage Translation History", "மொழிபெயர்ப்பு வரலாற்றைச் சேமித்தல்"]}}, "id": "t23"}, {"category": "Mobile App & Login", "created": 26, "date": "", "done": true, "doneAt": 1793015451541, "notes": "", "priority": "medium", "time": "", "title": "Add icons for Face-to-Face and Meeting modes", "tr": {"si": {"category": ["Mobile App & Login", "ජංගම යෙදුම සහ පුරනය වීම"], "title": ["Add icons for Face-to-Face and Meeting modes", "Face-to-Face සහ රැස්වීම් ප්‍රකාර සඳහා අයිකන එක් කරන්න"]}, "ta": {"category": ["Mobile App & Login", "மொபைல் செயலி மற்றும் உள்நுழைவு"], "title": ["Add icons for Face-to-Face and Meeting modes", "Face-to-Face மற்றும் கூட்டப் பயன்முறைகளுக்கு ஐகான்களைச் சேர்க்கவும்"]}}, "id": "t26"}, {"category": "Mobile App & Login", "created": 27, "date": "2026-10-30", "done": false, "notes": "", "order": 7.5, "priority": "high", "time": "", "title": "Add Google Sign-In alongside normal login", "tr": {"si": {"category": ["Mobile App & Login", "ජංගම යෙදුම සහ පුරනය වීම"], "title": ["Add Google Sign-In alongside normal login", "සාමාන්‍ය පුරනය වීමට අමතරව Google Sign-In එක් කරන්න"]}, "ta": {"category": ["Mobile App & Login", "மொபைல் செயலி மற்றும் உள்நுழைவு"], "title": ["Add Google Sign-In alongside normal login", "வழக்கமான உள்நுழைவுடன் Google Sign-In ஐச் சேர்க்கவும்"]}}, "id": "t27"}, {"category": "Mobile App & Login", "created": 28, "date": "2026-11-10", "done": false, "notes": "", "order": 7.75, "priority": "medium", "time": "", "title": "Add a language dropdown on the login screen ( App Language )", "tr": {"si": {"category": ["Mobile App & Login", "ජංගම යෙදුම සහ පුරනය වීම"], "title": ["Add a language dropdown on the login screen ( App Language )", "ලොගින් තිරයේ භාෂා ඩ්‍රොප්ඩවුන් එකක් එකතු කරන්න (App Language)"]}, "ta": {"category": ["Mobile App & Login", "மொபைல் செயலி மற்றும் உள்நுழைவு"], "title": ["Add a language dropdown on the login screen", "உள்நுழைவுத் திரையில் மொழித் தேர்வுப் பட்டியலைச் சேர்க்கவும்"]}}, "id": "t28"}, {"category": "Dark Mode", "created": 29, "date": "2026-10-30", "done": false, "notes": "", "priority": "high", "time": "", "title": "Smooth, consistent dark mode across the app", "tr": {"si": {"category": ["Dark Mode", "අඳුරු ප්‍රකාරය"], "title": ["Smooth, consistent dark mode across the app", "සම්පූර්ණ යෙදුම පුරා සුමට, ස්ථාවර අඳුරු ප්‍රකාරය"]}, "ta": {"category": ["Dark Mode", "இருண்ட பயன்முறை"], "title": ["Smooth, consistent dark mode across the app", "செயலி முழுவதும் சீரான, நிலையான இருண்ட பயன்முறை"]}}, "id": "t29"}, {"category": "Dashboard", "created": 31, "date": "2026-10-30", "done": false, "notes": "", "priority": "low", "time": "", "title": "Make the launch button hover color green", "tr": {"si": {"category": ["Dashboard", "උපකරණ පුවරුව"], "title": ["Make the launch button hover color green", "Launch බොත්තම මත hover වර්ණය කොළ පාට කරන්න"]}, "ta": {"category": ["Dashboard", "டாஷ்போர்டு"], "title": ["Make the launch button hover color green", "Launch பொத்தானின் hover நிறத்தைப் பச்சையாக மாற்றவும்"]}}, "id": "t31"}, {"category": "Dashboard", "created": 32, "date": "2026-10-30", "done": false, "notes": "", "priority": "low", "time": "", "title": "Match the broadcast button color to the UI design", "tr": {"si": {"category": ["Dashboard", "උපකරණ පුවරුව"], "title": ["Match the broadcast button color to the UI design", "Broadcast බොත්තමේ වර්ණය UI සැලසුමට ගැළපෙන ලෙස සකසන්න"]}, "ta": {"category": ["Dashboard", "டாஷ்போர்டு"], "title": ["Match the broadcast button color to the UI design", "Broadcast பொத்தானின் நிறத்தை UI வடிவமைப்புக்குப் பொருத்தவும்"]}}, "id": "t32"}, {"category": "Live Translation", "created": 33, "date": "", "done": true, "doneAt": 1793015826985, "notes": "", "priority": "high", "time": "", "title": "Find and fix the echo error", "tr": {"si": {"category": ["Live Translation", "සජීවී පරිවර්තනය"], "title": ["Find and fix the echo error", "ප්‍රතිරාව (echo) දෝෂය සොයා නිවැරදි කරන්න"]}, "ta": {"category": ["Live Translation", "நேரலை மொழிபெயர்ப்பு"], "title": ["Find and fix the echo error", "எதிரொலி (echo) பிழையைக் கண்டறிந்து சரிசெய்யவும்"]}}, "id": "t33"}, {"category": "Stream Translation", "created": 34, "date": "2026-11-10", "done": false, "notes": "", "priority": "high", "time": "", "title": "Schedule with Microsoft Outlook Calendar", "tr": {"si": {"category": ["Stream Translation", "විකාශ පරිවර්තනය"], "title": ["Schedule with Microsoft Outlook Calendar", "Microsoft Outlook Calendar සමඟ කාලසටහන් කිරීම"]}, "ta": {"category": ["Stream Translation", "ஒளிபரப்பு மொழிபெயர்ப்பு"], "title": ["Schedule with Microsoft Outlook Calendar", "Microsoft Outlook Calendar உடன் அட்டவணையிடல்"]}}, "id": "t34"}, {"category": "Stream Translation", "created": 35, "date": "2026-11-10", "done": false, "notes": "", "priority": "high", "time": "", "title": "Schedule with Google Calendar", "tr": {"si": {"category": ["Stream Translation", "විකාශ පරිවර්තනය"], "title": ["Schedule with Google Calendar", "Google Calendar සමඟ කාලසටහන් කිරීම"]}, "ta": {"category": ["Stream Translation", "ஒளிபரப்பு மொழிபெயர்ப்பு"], "title": ["Schedule with Google Calendar", "Google Calendar உடன் அட்டவணையிடல்"]}}, "id": "t35"}, {"category": "Stream Translation", "created": 36, "date": "2026-10-30", "done": false, "notes": "", "order": 11.453125, "priority": "medium", "time": "", "title": "Add a language selection multi selection dropdown", "tr": {"si": {"category": ["Stream Translation", "විකාශ පරිවර්තනය"], "title": ["Add a language selection multi selection dropdown", "භාෂා තේරීම සඳහා බහු-තේරීම් පතන ලැයිස්තුව එක් කරන්න"]}, "ta": {"category": ["Stream Translation", "ஒளிபரப்பு மொழிபெயர்ப்பு"], "title": ["Add a language selection dropdown", "மொழித் தேர்வுப் பட்டியலைச் சேர்க்கவும்"]}}, "id": "t36"}, {"category": "Help & Docs", "created": 37, "date": "2026-11-10", "done": false, "notes": "", "priority": "low", "time": "", "title": "Add video guides to the Help section & Doc", "tr": {"si": {"category": ["Help & Docs", "උදව් සහ ලේඛන"], "title": ["Add video guides to the Help section & Doc", "උදව් කොටසට සහ ලේඛනයට වීඩියෝ මාර්ගෝපදේශ එක් කරන්න"]}, "ta": {"category": ["Help & Docs", "உதவி மற்றும் ஆவணங்கள்"], "title": ["Add video guides to the Help section", "உதவிப் பிரிவில் வீடியோ வழிகாட்டிகளைச் சேர்க்கவும்"]}}, "id": "t37"}, {"category": "Meeting Integration", "created": 38, "date": "2026-10-30", "done": false, "notes": "", "priority": "low", "time": "", "title": "Fix connection issues with Teams, Zoom and Google Meet", "tr": {"si": {"category": ["Meeting Integration", "රැස්වීම් ඒකාබද්ධ කිරීම"], "title": ["Fix connection issues with Teams, Zoom and Google Meet", "Teams, Zoom සහ Google Meet සමඟ සම්බන්ධතා ගැටලු නිවැරදි කරන්න"]}, "ta": {"category": ["Meeting Integration", "கூட்ட ஒருங்கிணைப்பு"], "title": ["Fix connection issues with Teams, Zoom and Google Meet", "Teams, Zoom மற்றும் Google Meet உடனான இணைப்புச் சிக்கல்களைச் சரிசெய்யவும்"]}}, "id": "t38"}, {"category": "Meeting Integration", "created": 39, "date": "2026-11-10", "done": false, "notes": "", "priority": "low", "time": "", "title": "Review and build the needed plugin options", "tr": {"si": {"category": ["Meeting Integration", "රැස්වීම් ඒකාබද්ධ කිරීම"], "title": ["Review and build the needed plugin options", "අවශ්‍ය plugin විකල්ප සමාලෝචනය කර සාදන්න"]}, "ta": {"category": ["Meeting Integration", "கூட்ட ஒருங்கிணைப்பு"], "title": ["Review and build the needed plugin options", "தேவையான plugin விருப்பங்களை மதிப்பாய்வு செய்து உருவாக்கவும்"]}}, "id": "t39"}, {"category": "Document Translation", "created": 40, "date": "2026-10-30", "done": false, "notes": "", "order": 18, "priority": "high", "time": "", "title": "Document translation for Sinhala, English and Tamil", "tr": {"si": {"category": ["Document Translation", "ලේඛන පරිවර්තනය"], "title": ["Document translation for Sinhala, English and Tamil", "සිංහල, ඉංග්‍රීසි සහ දෙමළ සඳහා ලේඛන පරිවර්තනය"]}, "ta": {"category": ["Document Translation", "ஆவண மொழிபெயர்ப்பு"], "title": ["Document translation for Sinhala, English and Tamil", "சிங்களம், ஆங்கிலம் மற்றும் தமிழுக்கான ஆவண மொழிபெயர்ப்பு"]}}, "id": "t40"}, {"category": "Agent Mode", "created": 41, "date": "2026-10-30", "done": false, "notes": "", "order": 1.5, "priority": "high", "time": "", "title": "Build at least one Agent Mode feature", "tr": {"si": {"category": ["Agent Mode", "Agent Mode"], "title": ["Build at least one Agent Mode feature", "අවම වශයෙන් එක් Agent Mode විශේෂාංගයක් සාදන්න"]}, "ta": {"category": ["Agent Mode", "Agent Mode"], "title": ["Build at least one Agent Mode feature", "குறைந்தது ஒரு Agent Mode அம்சத்தை உருவாக்கவும்"]}}, "id": "t41"}, {"category": "Agent Mode", "created": 42, "date": "2026-10-30", "done": false, "notes": "", "order": 1.75, "priority": "high", "time": "", "title": "Add a reference-based income generation workflow", "tr": {"si": {"category": ["Agent Mode", "Agent Mode"], "title": ["Add a reference-based income generation workflow", "යොමු-පදනම් ආදායම් උත්පාදන ක්‍රියාවලියක් එක් කරන්න"]}, "ta": {"category": ["Agent Mode", "Agent Mode"], "title": ["Add a reference-based income generation workflow", "பரிந்துரை அடிப்படையிலான வருமானம் ஈட்டும் பணிப்பாய்வைச் சேர்க்கவும்"]}}, "id": "t42"}, {"category": "", "created": 1793014242039, "date": "2026-10-30", "done": false, "notes": "", "order": 45, "priority": "medium", "time": "", "title": "Deploy to play store and app store", "tr": {"si": {"title": ["Deploy to play store and app store", "Play Store සහ App Store වෙත නිකුත් කරන්න"]}, "ta": {"title": ["Deploy to play store and app store", "Play Store மற்றும் App Store இல் வெளியிடவும்"]}}, "id": "tmvp6dvjrxt55"}, {"category": "", "created": 1793015337053, "date": "2026-11-10", "done": false, "notes": "", "order": 44, "priority": "medium", "time": "", "title": "Scan and translate option", "tr": {"si": {"title": ["Scan and translate option", "ස්කෑන් කර පරිවර්තනය කිරීමේ විකල්පය"]}, "ta": {"title": ["Scan and translate option", "ஸ்கேன் செய்து மொழிபெயர்க்கும் வசதி"]}}, "id": "tmvp71cgtae6e"}, {"category": "", "created": 1793016083583, "date": "2026-10-30", "done": false, "notes": "", "order": 20.5, "priority": "high", "time": "", "title": "Get API's in Our Model", "tr": {"si": {"title": ["Get API's in Our Model", "අපේ මොඩලයේ API ලබා ගන්න"]}}, "id": "tmvp7hchro7bq"}, {"category": "", "created": 1793016276875, "date": "2026-10-30", "done": false, "notes": "", "order": 4.5, "priority": "high", "time": "", "title": "Payhere and Email Service Intrigation", "id": "tmvp7lhmzs7eo"}, {"category": "", "created": 1793017016121, "date": "2026-10-30", "done": false, "notes": "", "order": 46, "priority": "medium", "time": "", "title": "chose transcript as ascending or descending", "id": "tmvp81c1l88qj"}];
+
+  /* "this device only" storage that behaves like a small Firestore collection */
+  function localCollection(){
+    const KEY = "mytasks.standalone.v1";
+    let rows = null;
+    try{ rows = JSON.parse(localStorage.getItem(KEY) || "null"); }catch(e){}
+    if(!Array.isArray(rows)) rows = STARTER_TASKS.map(t=>Object.assign({}, t));
+    const subs = [];
+    const save = ()=>{ try{ localStorage.setItem(KEY, JSON.stringify(rows)); }catch(e){} };
+    const emit = ()=>{ const snap = {docs: rows.map(r=>({id:r.id, exists:true, data:()=>{ const {id, ...rest} = r; return rest; }}))}; subs.forEach(f=>f(snap)); };
+    save();
+    return {
+      limit(){ return this; },
+      onSnapshot(fn){ subs.push(fn); setTimeout(emit, 0); return ()=>{}; },
+      doc(id){ return {
+        async update(p){ rows = rows.map(r=> r.id===id ? Object.assign({}, r, p) : r); save(); emit(); },
+        async set(d){ rows = rows.filter(r=>r.id!==id).concat([Object.assign({}, d, {id})]); save(); emit(); },
+        async delete(){ rows = rows.filter(r=>r.id!==id); save(); emit(); }
+      }; }
+    };
+  }
+  function loadScript(src){ return new Promise((ok, bad)=>{ const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = bad; document.head.appendChild(s); }); }
+
+  async function connect(){
+    const params = new URLSearchParams(location.search);
+    if(params.has("view")){ canWrite = false; noticeK("viewLinkNotice"); }
+    applyPermissions();
+    const cfg = window.FIREBASE_CONFIG;
+    if(!cfg){
+      col = localCollection();
+      noticeK(canWrite ? "localMode" : "viewLinkNotice");
+      col.onSnapshot(snap=>{
+        loaded = true;
+        tasks = snap.docs.map(d=>Object.assign({}, d.data(), {id:d.id}));
+        cacheSave(); if(!drag) render();
+      });
+      return;
+    }
+    try{
+      await loadScript("https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js");
+      await loadScript("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js");
+      firebase.initializeApp(cfg);
+      col = firebase.firestore().collection("tasks");
+      let seeded = false;
+      col.limit(1000).onSnapshot(snap=>{
+        if(snap.empty && !seeded && canWrite){
+          seeded = true;
+          const batch = firebase.firestore().batch();
+          STARTER_TASKS.forEach(t=>{ const {id, ...data} = t; batch.set(col.doc(id), data); });
+          batch.commit().catch(()=>syncK("syncFail"));
+          return;
+        }
+        loaded = true;
+        tasks = snap.docs.filter(d=>d.exists).map(d=>Object.assign({}, d.data(), {id:d.id}));
+        cacheSave();
+        if(!drag) render();
+        syncK("syncShared");
+      }, ()=> syncK("syncLost"));
+    }catch(e){
+      noticeK("cantLoadStandalone");
+      canWrite=false; applyPermissions();
+    }
+  }
+
+  function writeFailed(e){
+    if(e && (e.code==="invalid_argument" || e.code==="permission-denied")){ canWrite=false; applyPermissions(); noticeK("noPermission"); render(); }
+    else syncK("syncFail");
+  }
+  async function updateTask(id, patch){
+    tasks = tasks.map(t => t.id===id ? Object.assign({}, t, patch) : t); render();
+    if(!col) return;
+    try{ await col.doc(id).update(patch); }catch(e){ writeFailed(e); }
+  }
+  async function createTask(data){
+    const id = newId();
+    tasks.push(Object.assign({id}, data)); render();
+    if(!col) return;
+    try{ await col.doc(id).set(data); }catch(e){ writeFailed(e); }
+  }
+  let undoItems = [], undoTimer = null, origDate = "";
+  function flash(msg){
+    undoItems = [];
+    $("#toastMsg").textContent = msg;
+    $("#undoBtn").hidden = true;
+    $("#toast").hidden = false;
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(()=>{ $("#toast").hidden = true; }, 4000);
+  }
+  function showUndo(msg, items){
+    undoItems = items.map(t=>Object.assign({}, t));
+    $("#toastMsg").textContent = msg;
+    $("#undoBtn").hidden = false;
+    $("#toast").hidden = false;
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(()=>{ $("#toast").hidden = true; undoItems = []; }, 7000);
+  }
+  $("#undoBtn").addEventListener("click", async ()=>{
+    const items = undoItems; undoItems = [];
+    $("#toast").hidden = true; clearTimeout(undoTimer);
+    for(const t of items){
+      const {id, ...data} = t;
+      if(!tasks.some(x=>x.id===id)) tasks.push(t);
+      render();
+      if(col){ try{ await col.doc(id).set(data); }catch(e){ writeFailed(e); } }
+    }
+  });
+  async function deleteTask(id){
+    tasks = tasks.filter(t=>t.id!==id); render();
+    if(!col) return;
+    try{ await col.doc(id).delete(); }catch(e){ writeFailed(e); }
+  }
+
+  /* ---------- rendering ---------- */
+  function taskHTML(t, n){
+    const today = todayStr(0);
+    const late = !t.done && t.date && t.date < today;
+    const parts = [];
+    const cal = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>`;
+    if(t.date){
+      const [Y,M,D] = t.date.split("-").map(Number);
+      const now = new Date(); now.setHours(0,0,0,0);
+      const days = Math.round((new Date(Y,M-1,D) - now) / 86400000);
+      const soon = !t.done && !late && days <= 3;
+      let tag = "";
+      if(!t.done){
+        if(late) tag = -days===1 ? T("dayLate") : T("daysLate",{n:-days});
+        else if(days > 1) tag = T("inDays",{n:days});
+      }
+      const dlIn = canWrite ? `<input type="date" class="dl-input" min="${todayStr(0)}" value="${esc(t.date)}" aria-label="${esc(T("changeDeadline",{t:TXF(t,"title")}))}">` : "";
+      parts.push(`<span class="dl${late?" late":soon?" soon":""}"><b>${cal}${esc(late?T("overdueL",{d:fmtDate(t.date)}):T("deadlineL",{d:fmtDate(t.date)}))}${esc(tag)}${dlIn}</b></span>`);
+    }
+    else if(!t.done) parts.push(`<span class="dl none"><b>${cal}${esc(canWrite ? T("tapSetDeadline") : T("noDeadlineSet"))}${canWrite ? `<input type="date" class="dl-input" min="${todayStr(0)}" value="" aria-label="${esc(T("setDeadlineFor",{t:TXF(t,"title")}))}">` : ""}</b></span>`);
+    if(t.category) parts.push(`<span>${esc(TXF(t,"category"))}</span>`);
+    if(t.notes) parts.push(`<span>${esc(T("hasNotes"))}</span>`);
+    const lv = LV[t.priority] ? t.priority : "none";
+    const lvHTML = pickId===t.id && canWrite
+      ? `<span class="lvl-pick">${["high","medium","low"].map(k=>`<button type="button" class="lvl lv-${k}${lv===k?" on":""}" data-setlv="${k}"><i></i>${LV[k]}</button>`).join("")}</span>`
+      : `<button type="button" class="lvl lv-${lv}" data-openlv aria-label="${esc(T("levelAria",{l:lv==="none"?T("notSet"):LV[lv]}))}"><i></i>${esc(lv==="none"?T("setLevel"):LV[lv])}</button>`;
+    parts.unshift(lvHTML);
+    return `<li class="task lv-${lv}${t.done?" done":""}${(filter==="today"||filter==="date") && n>=1 && n<=3 ? " top" : ""}" data-id="${esc(t.id)}">
+      <div class="num" aria-label="Priority ${n||""}"><span>${t.done?"✓":n}</span></div>
+      <div class="body" role="button" tabindex="0" aria-label="${esc(T("editAria",{t:(n?n+", ":"")+TXF(t,"title")}))}">
+        <div class="title">${esc(TXF(t,"title"))}</div>
+        ${parts.length?`<div class="meta">${parts.join("")}</div>`:""}
+      </div>
+      <button class="check" aria-label="${esc(T(t.done?"markNotDone":"markDone",{t:TXF(t,"title")}))}"${canWrite?"":" disabled"}><span></span></button>
+      ${!t.done && canWrite && filter==="todo" && levelFilter==="all" ? `<button class="handle" aria-label="${esc(T("dragAria",{t:TXF(t,"title")}))}"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg></button>` : ""}
+    </li>`;
+  }
+
+  function render(){
+    const today = todayStr(0);
+    const open = openTasks();
+    const overdue = open.filter(t=>t.date && t.date<today).length;
+    const dueToday = open.filter(t=>t.date===today).length;
+    let s = open.length ? T("sumTodo",{n:open.length}) : (tasks.length ? esc(T("allDone")) : "");
+    if(dueToday) s += ", " + T("sumToday",{n:dueToday});
+    if(overdue) s += ", " + T("sumOverdue",{n:overdue});
+    $("#summary").innerHTML = s;
+
+    const todayList = open.filter(t=>t.date && t.date<=today);
+    document.querySelector('.tab[data-f="today"]').textContent = T("today") + (todayList.length ? " ("+todayList.length+")" : "");
+    const dateList = open.filter(t=>t.date===filterDate).concat(doneTasks().filter(t=>t.date===filterDate));
+    const baseList = filter==="todo" ? open : filter==="today" ? todayList : filter==="date" ? dateList : doneTasks();
+    const lvCount = k => baseList.filter(t=>(LV[t.priority]?t.priority:"none")===k).length;
+    $("#levelbar").innerHTML = `<span>${esc(T("level"))}</span><button type="button" class="lvl all${levelFilter==="all"?" on":""}" data-lf="all" aria-pressed="${levelFilter==="all"}">${esc(T("all"))} (${baseList.length})</button>` +
+      ["high","medium","low"].map(k=>`<button type="button" class="lvl lv-${k}${levelFilter===k?" on":""}" data-lf="${k}" aria-pressed="${levelFilter===k}"><i></i>${LV[k]} (${lvCount(k)})</button>`).join("");
+    const list = levelFilter==="all" ? baseList : baseList.filter(t=>t.priority===levelFilter);
+    $("#datebar").hidden = filter!=="date";
+    $("#dPick").value = filterDate;
+    const rank = id => open.findIndex(x=>x.id===id) + 1;
+    $("#hint").style.display = filter==="todo" && canWrite && levelFilter==="all" ? "" : "none";
+    let html;
+    if(!list.length && levelFilter!=="all" && baseList.length){
+      html = `<div class="empty"><strong>${esc(T("noLevelHere",{l:lang==="en"?LV[levelFilter].toLowerCase():LV[levelFilter]}))}</strong><p>${esc(T("tapAll"))}</p></div>`;
+    } else if(!list.length){
+      const m = filter==="todo"
+        ? (loaded || tasks.length ? [T("nothingToDo"), canWrite ? T("tapAddOne") : ""] : [T("loading"),""])
+        : filter==="today"
+        ? [T("nothingToday"), T("nothingTodayP")]
+        : filter==="date"
+        ? [T("noDateTasks"), T("noDateTasksP")]
+        : [T("noDone"), T("noDoneP")];
+      html = `<div class="empty"><strong>${esc(m[0])}</strong><p>${esc(m[1])}</p></div>`;
+    } else {
+      html = `<ul id="ul"${filter==="todo" ? ' class="ranked"' : ""}>${list.map((t,i)=>taskHTML(t, (filter==="done" || t.done) ? 0 : rank(t.id))).join("")}</ul>`;
+      if(filter==="today") html = `<p class="hint" style="text-align:left;margin:4px 4px 0">${esc(T("todayHint"))}</p>` + html;
+      if(filter==="done" && canWrite) html += `<button class="clear-done" id="clearDone">${esc(T("deleteAllDone"))}</button>`;
+    }
+    $("#list").innerHTML = html;
+    renderDash();
+    scheduleTranslate();
+  }
+
+  /* ---------- progress dashboard ---------- */
+  function ring(pct, label){
+    const C = 2*Math.PI*40, off = C*(1-pct/100);
+    return `<div class="ring" role="img" aria-label="${label}"><svg viewBox="0 0 96 96"><circle class="track" cx="48" cy="48" r="40" fill="none" stroke-width="10"/><circle class="fill" cx="48" cy="48" r="40" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg><b>${pct}%</b></div>`;
+  }
+  function renderDash(){
+    const today = todayStr(0), week = todayStr(7);
+    const total = tasks.length, done = tasks.filter(t=>t.done).length;
+    const pct = total ? Math.round(done/total*100) : 0;
+    const open = openTasks();
+    const overdue = open.filter(t=>t.date && t.date<today).length;
+    const dueToday = open.filter(t=>t.date===today).length;
+    const thisWeek = open.filter(t=>t.date && t.date>today && t.date<=week).length;
+    const noDl = open.filter(t=>!t.date).length;
+    const recent = tasks.filter(t=>t.done && t.doneAt && t.doneAt > Date.now()-7*86400000).length;
+
+    let head;
+    if(filter==="date"){
+      const dt = tasks.filter(t=>t.date===filterDate), dd = dt.filter(t=>t.done).length;
+      const dp = dt.length ? Math.round(dd/dt.length*100) : 0;
+      head = `${ring(dp, T("pctDone",{p:dp}))}
+        <div><h2>${esc(T("progressFor",{d:fmtDate(filterDate)}))}</h2>
+        <p>${dt.length ? T("xOfY",{a:dd,b:dt.length}) : esc(T("noTasksDate"))}</p>
+        <p>${T("overall",{a:done,b:total,p:pct})}</p>
+        <button class="back" data-go="todo">${esc(T("showAll"))}</button></div>`;
+    } else {
+      head = `${ring(pct, T("pctDone",{p:pct}))}
+        <div><h2>${esc(T("progress"))}</h2>
+        <p>${T("xOfY",{a:done,b:total})}</p>
+        <p>${esc(T("finished7",{n:recent}))}</p></div>`;
+    }
+
+    // 14-day deadline chart
+    const days = [];
+    for(let i=0;i<14;i++){
+      const ds = todayStr(i);
+      const all = tasks.filter(t=>t.date===ds), d = all.filter(t=>t.done).length;
+      days.push({ds, n:all.length, d});
+    }
+    const maxN = Math.max(1, ...days.map(x=>x.n));
+    const chart = days.map((x,i)=>{
+      const [Y,M,D] = x.ds.split("-").map(Number);
+      const dt = new Date(Y,M-1,D);
+      const wd = i===0 ? T("today") : dt.toLocaleDateString(LOC(),{weekday:"short"});
+      const h = x.n ? Math.max(8, Math.round(x.n/maxN*100)) : 3;
+      const dh = x.n ? Math.round(x.d/x.n*100) : 0;
+      const sel = filter==="date" && filterDate===x.ds;
+      return `<button class="day${i===0?" is-today":""}${sel?" sel":""}" data-date="${x.ds}" aria-label="${esc(T("dayAria",{d:fmtDate(x.ds),n:x.n,x:x.d}))}">
+        <span class="cnt">${x.n||""}</span>
+        <span class="col" style="height:${h}%"><i style="height:${dh}%"></i></span>
+        <span class="lbl"><b>${D}</b>${esc(wd)}</span></button>`;
+    }).join("");
+
+    const next = open.slice(0,5).map((t,i)=>{
+      const late = t.date && t.date<today;
+      const dl = t.date ? `<small class="${late?"late":""}">${esc(late?T("overdueL",{d:fmtDate(t.date)}):T("deadlineL",{d:fmtDate(t.date)}))}</small>` : `<small>${esc(T("noDeadlineSet"))}</small>`;
+      return `<li><span class="n">${i+1}</span><div>${esc(TXF(t,"title"))}${dl}</div></li>`;
+    }).join("");
+    const fin = doneTasks().slice(0,5).map(t=>{
+      const when = t.doneAt ? new Date(t.doneAt).toLocaleDateString(LOC(),{weekday:"short", day:"numeric", month:"short"}) : "";
+      return `<li><span class="n ok">✓</span><div>${esc(TXF(t,"title"))}${when?`<small>${esc(T("finishedOn",{d:when}))}</small>`:""}</div></li>`;
+    }).join("");
+
+    $("#dash").innerHTML = `<div class="dash-card">
+      <div class="dash-head">${head}</div>
+      <div class="dash-sec">
+        <h3>${esc(T("deadlines"))}</h3>
+        <div class="tiles">
+          <button class="tile t-late" data-go="today"><strong>${overdue}</strong><span>${esc(T("overdueTile"))}</span></button>
+          <button class="tile t-today" data-go="today"><strong>${dueToday}</strong><span>${esc(T("dueTodayTile"))}</span></button>
+          <div class="tile t-week"><strong>${thisWeek}</strong><span>${esc(T("next7Tile"))}</span></div>
+          <div class="tile"><strong>${noDl}</strong><span>${esc(T("noDeadlineTile"))}</span></div>
+        </div>
+      </div>
+      <div class="dash-sec">
+        <h3>${esc(T("next14"))}</h3>
+        <div style="overflow-x:auto"><div class="chart" style="min-width:420px">${chart}</div></div>
+        <div class="legend"><span><i style="background:var(--accent)"></i>${esc(T("legendDone"))}</span><span><i style="background:var(--num-bg)"></i>${esc(T("legendNot"))}</span><span>${esc(T("tapDay"))}</span></div>
+      </div>
+      <div class="lists">
+        <div><h3>${esc(T("nextUp"))}</h3>${next ? `<ol class="next">${next}</ol>` : `<p class="none">${esc(T("nothingLeft"))}</p>`}</div>
+        <div><h3>${esc(T("recent"))}</h3>${fin ? `<ul class="next">${fin}</ul>` : `<p class="none">${esc(T("recentEmpty"))}</p>`}</div>
+      </div>
+    </div>`;
+  }
+  function setFilter(f){
+    filter = f;
+    document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed", x.dataset.f===filter?"true":"false"));
+    render();
+  }
+  $("#dash").addEventListener("click", e=>{
+    const d = e.target.closest("[data-date]");
+    if(d){ filterDate = d.dataset.date; setFilter("date"); if(window.innerWidth<900) $("#list").scrollIntoView({behavior:"smooth", block:"start"}); return; }
+    const g = e.target.closest("[data-go]");
+    if(g){ setFilter(g.dataset.go); if(window.innerWidth<900) $("#list").scrollIntoView({behavior:"smooth", block:"start"}); }
+  });
+  $("#dPick").addEventListener("change", ()=>{ if($("#dPick").value){ filterDate = $("#dPick").value; render(); } });
+  function shiftDay(n){ const [Y,M,D]=filterDate.split("-").map(Number); const d=new Date(Y,M-1,D+n); filterDate=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); render(); }
+  $("#dPrev").addEventListener("click", ()=>shiftDay(-1));
+  $("#dNext").addEventListener("click", ()=>shiftDay(1));
+  $("#dToday").addEventListener("click", ()=>{ filterDate = todayStr(0); render(); });
+
+  /* ---------- drag and drop (touch + mouse) ---------- */
+  function renumber(){
+    let n = 0;
+    document.querySelectorAll("#ul > li").forEach(li=>{
+      if(li.classList.contains("lifted")) return;
+      n++;
+      if(li.classList.contains("placeholder")){ drag.li.querySelector(".num span").textContent = n; return; }
+      const sp = li.querySelector(".num span"); if(sp) sp.textContent = n;
+    });
+  }
+  function startDrag(e, li){
+    const r = li.getBoundingClientRect();
+    const ph = document.createElement("li");
+    ph.className = "placeholder"; ph.style.height = r.height+"px";
+    li.parentNode.insertBefore(ph, li);
+    li.classList.add("lifted");
+    li.style.left = r.left+"px"; li.style.width = r.width+"px"; li.style.top = r.top+"px";
+    drag = { li, ph, id: li.dataset.id, offset: e.clientY - r.top, y: e.clientY, pid: e.pointerId };
+    document.body.classList.add("dragging");
+    if(navigator.vibrate) try{ navigator.vibrate(10); }catch(_){}
+    tick();
+  }
+  function moveDrag(y){
+    drag.y = y;
+    drag.li.style.top = (y - drag.offset)+"px";
+    const items = [...document.querySelectorAll("#ul > li.task:not(.lifted)")];
+    let placed = false;
+    for(const it of items){
+      const r = it.getBoundingClientRect();
+      if(y < r.top + r.height/2){ if(it.previousElementSibling !== drag.ph) it.parentNode.insertBefore(drag.ph, it); placed = true; break; }
+    }
+    if(!placed){ const ul=$("#ul"); if(ul.lastElementChild !== drag.ph) ul.appendChild(drag.ph); }
+    renumber();
+  }
+  function tick(){
+    if(!drag) return;
+    const edge = 90, H = window.innerHeight;
+    let dy = 0;
+    if(drag.y < edge) dy = -Math.ceil((edge-drag.y)/6);
+    else if(drag.y > H-edge) dy = Math.ceil((drag.y-(H-edge))/6);
+    if(dy){ window.scrollBy(0, dy); moveDrag(drag.y); }
+    drag.raf = requestAnimationFrame(tick);
+  }
+  function endDrag(){
+    if(!drag) return;
+    cancelAnimationFrame(drag.raf);
+    const {li, ph, id} = drag;
+    const ids = [...document.querySelectorAll("#ul > li")].filter(x=>x!==li).map(x=> x===ph ? "__ph" : x.dataset.id);
+    const idx = ids.indexOf("__ph");
+    ph.remove();
+    li.classList.remove("lifted"); li.style.cssText = "";
+    document.body.classList.remove("dragging");
+    drag = null;
+    const others = openTasks().filter(t=>t.id!==id);
+    const oldIdx = openTasks().findIndex(t=>t.id===id);
+    if(idx === oldIdx){ render(); return; }
+    updateTask(id, {order: orderAt(others, idx)});
+  }
+
+  $("#list").addEventListener("pointerdown", e=>{
+    const h = e.target.closest(".handle"); if(!h || !canWrite || drag) return;
+    e.preventDefault();
+    h.setPointerCapture(e.pointerId);
+    startDrag(e, h.closest(".task"));
+  });
+  $("#list").addEventListener("pointermove", e=>{ if(drag && e.pointerId===drag.pid){ e.preventDefault(); moveDrag(e.clientY); } });
+  $("#list").addEventListener("pointerup", e=>{ if(drag && e.pointerId===drag.pid) endDrag(); });
+  $("#list").addEventListener("pointercancel", e=>{ if(drag && e.pointerId===drag.pid) endDrag(); });
+  $("#list").addEventListener("touchmove", e=>{ if(drag) e.preventDefault(); }, {passive:false});
+
+  /* ---------- sheet ---------- */
+  function openSheet(t){
+    editingId = t ? t.id : null;
+    const open = openTasks();
+    const isOpen = !t || !t.done;
+    const max = t ? (isOpen ? open.length : open.length+1) : open.length+1;
+    const cur = t ? (isOpen ? open.findIndex(x=>x.id===t.id)+1 : max) : max;
+    sheetIsEdit = !!t; sheetIsDone = !!(t && t.done); sheetMax = max;
+    refreshSheetText();
+    $("#delBtn").hidden = !t || !canWrite;
+    $("#fTitle").value = t ? t.title : "";
+    setLevel(t && LV[t.priority] ? t.priority : (t ? "" : "medium"));
+    $("#fPos").value = cur; $("#fPos").max = max;
+    $("#fDate").value = t ? (t.date||"") : "";
+    $("#fDate").min = todayStr(0);
+    origDate = t ? (t.date||"") : "";
+    $("#fCat").value = t ? (t.category||"") : "";
+    $("#fNotes").value = t ? (t.notes||"") : "";
+    const cats = [...new Set(tasks.map(x=>x.category).filter(Boolean))];
+    $("#catList").innerHTML = cats.map(c=>`<option value="${esc(c)}">`).join("");
+    $("#fErr").textContent = "";
+    const ro = !canWrite;
+    document.querySelectorAll("#sheet input, #sheet textarea, .quick button").forEach(el=>el.disabled = ro);
+    $("#saveBtn").hidden = ro;
+    $("#shade").classList.add("open"); $("#sheet").classList.add("open");
+    if(!t) setTimeout(()=>$("#fTitle").focus(), 250);
+  }
+  let sheetIsEdit = false, sheetIsDone = false, sheetMax = 0;
+  function refreshSheetText(){
+    $("#sheetTitle").textContent = sheetIsEdit ? T("editTask") : T("newTask");
+    $("#saveBtn").textContent = sheetIsEdit ? T("saveChanges") : T("addTask");
+    $("#posHint").textContent = T("ofN",{n:sheetMax}) + (sheetIsDone ? T("whenReopened") : "");
+    $("#cancelBtn").textContent = canWrite ? T("cancel") : T("close");
+  }
+  function closeSheet(){ $("#shade").classList.remove("open"); $("#sheet").classList.remove("open"); editingId = null; }
+  function saveSheet(){
+    if(!canWrite) return;
+    const title = $("#fTitle").value.trim();
+    if(!title){ $("#fErr").textContent = T("errTitle"); $("#fTitle").focus(); return; }
+    const date = $("#fDate").value || "";
+    if(date && date < todayStr(0) && date !== origDate){ $("#fErr").textContent = T("errPast"); return; }
+    const data = { title, date, time: "", category: $("#fCat").value.trim(), notes: $("#fNotes").value.trim() };
+    if(selLevel) data.priority = selLevel;
+    const others = openTasks().filter(t=>t.id!==editingId);
+    let pos = parseInt($("#fPos").value, 10);
+    if(!pos || pos < 1) pos = others.length+1;
+    pos = Math.min(pos, others.length+1);
+    if(editingId){
+      const t = tasks.find(x=>x.id===editingId);
+      const curIdx = openTasks().findIndex(x=>x.id===editingId);
+      if(t && !t.done){ if(pos-1 !== curIdx) data.order = orderAt(others, pos-1); }
+      else data.order = orderAt(others, pos-1);
+      const id = editingId; closeSheet(); updateTask(id, data);
+    } else {
+      data.order = orderAt(others, pos-1); data.done = false; data.created = Date.now();
+      closeSheet(); createTask(data);
+    }
+  }
+
+  /* ---------- events ---------- */
+  $("#addBtn").addEventListener("click", ()=>openSheet(null));
+  $("#cancelBtn").addEventListener("click", closeSheet);
+  $("#shade").addEventListener("click", closeSheet);
+  $("#saveBtn").addEventListener("click", saveSheet);
+  $("#fTitle").addEventListener("keydown", e=>{ if(e.key==="Enter") saveSheet(); });
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape" && $("#sheet").classList.contains("open")) closeSheet(); });
+  $("#delBtn").addEventListener("click", ()=>{
+    if(!editingId || !canWrite) return;
+    const id = editingId;
+    const copy = tasks.filter(t=>t.id===id);
+    closeSheet(); deleteTask(id);
+    showUndo(T("taskDeleted"), copy);
+  });
+  document.querySelector(".quick").addEventListener("click", e=>{
+    const b = e.target.closest("button"); if(!b || b.disabled) return;
+    if(b.dataset.q==="none"){ $("#fDate").value=""; }
+    else $("#fDate").value = todayStr(Number(b.dataset.q));
+  });
+  document.querySelector(".tabs").addEventListener("click", e=>{
+    const b = e.target.closest(".tab"); if(!b) return;
+    filter = b.dataset.f;
+    document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+    render();
+  });
+  $("#list").addEventListener("click", e=>{
+    if(e.target.id==="clearDone"){
+      if(!canWrite) return;
+      const copy = doneTasks();
+      copy.forEach(t=>deleteTask(t.id));
+      showUndo(T("nDoneDeleted",{n:copy.length}), copy);
+      return;
+    }
+    const li = e.target.closest(".task"); if(!li || drag) return;
+    if(e.target.closest(".dl-input")) return;
+    const t = tasks.find(x=>x.id===li.dataset.id); if(!t) return;
+    if(e.target.closest("[data-openlv]")){ if(canWrite){ pickId = t.id; render(); } else openSheet(t); return; }
+    const sl = e.target.closest("[data-setlv]");
+    if(sl){ pickId = null; updateTask(t.id, {priority: sl.dataset.setlv}); return; }
+    if(pickId){ pickId = null; render(); }
+    if(e.target.closest(".check")){
+      if(!canWrite) return;
+      if(t.done){ const open = openTasks(); updateTask(t.id, {done:false, doneAt:null, order: orderAt(open, open.length)}); }
+      else updateTask(t.id, {done:true, doneAt:Date.now()});
+    }
+    else if(e.target.closest(".body")) openSheet(t);
+  });
+  $("#list").addEventListener("change", e=>{
+    const inp = e.target.closest(".dl-input"); if(!inp || !canWrite) return;
+    const li = inp.closest(".task"); if(!li) return;
+    if(inp.value && inp.value < todayStr(0)){ render(); flash(T("errPast")); return; }
+    updateTask(li.dataset.id, {date: inp.value || "", time: ""});
+  });
+  $("#list").addEventListener("keydown", e=>{
+    const b = e.target.closest(".body");
+    if(b && e.target===b && (e.key==="Enter" || e.key===" ")){ e.preventDefault(); const t = tasks.find(x=>x.id===b.closest(".task").dataset.id); if(t) openSheet(t); }
+  });
+  $("#levelbar").addEventListener("click", e=>{
+    const b = e.target.closest("[data-lf]"); if(!b) return;
+    levelFilter = b.dataset.lf; pickId = null; render();
+  });
+  $("#fLevel").addEventListener("click", e=>{
+    const b = e.target.closest("[data-lv]"); if(!b || b.disabled) return;
+    setLevel(b.dataset.lv);
+  });
+  function setLevel(k){
+    selLevel = k;
+    document.querySelectorAll("#fLevel [data-lv]").forEach(x=>{ x.classList.toggle("on", x.dataset.lv===k); x.setAttribute("aria-pressed", x.dataset.lv===k); });
+  }
+
+  /* ---------- start ---------- */
+  applyStatic();
+  $("#langSel").addEventListener("change", e=>setLang(e.target.value));
+  filterDate = todayStr(0);
+  tasks = cacheLoad() || [];
+  render();
+  connect();
+})();
+</script>
+</body>
+</html>
