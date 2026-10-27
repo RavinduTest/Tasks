@@ -1,101 +1,48 @@
-# My Tasks: hosting guide
+# My Tasks
 
-This folder has everything you need to put the task app on Netlify or GitHub Pages:
+A simple, mobile-friendly task list for planning and tracking the U2Me project work. Open it on any phone or computer, with no app to install and no login needed.
 
-- `index.html` is the whole app.
-- `README.md` is this guide.
+**Open the app:** https://ravindutest.github.io/Tasks/
+**View-only link:** https://ravindutest.github.io/Tasks/?view
 
-The app already contains all 37 tasks, with their order, levels, deadlines and Sinhala/Tamil translations, as they were when this copy was made.
+## Features
 
-There are two ways to run it:
+### Priority order
+Every task has a number on its left, and **1** is the most important. To change the order, drag a task by its ⋮⋮ handle. The numbers update automatically. You can also type a position number when editing a task to move it straight there.
 
-| Mode | What it does | Setup |
-|---|---|---|
-| **This device only** (default) | Works right away. Changes are saved only in the browser that made them, so your team and your sir won't see each other's changes. | None |
-| **Shared live list** (Firebase) | Everyone sees the same list, and changes appear for everyone instantly, just like the Claude version. | About 10 minutes, free |
+### Priority levels
+Each task can be marked **High**, **Medium**, or **Low**. To change a task's level, tap its colored label. The color also appears as a stripe on the task's left edge, so the level is easy to see at a glance.
 
----
+### Deadlines
+To set or change a task's deadline, tap its deadline label and pick a date from the calendar. Past dates can't be selected. Deadline labels change color as the date gets closer:
+- **Blue:** more than 3 days away
+- **Orange:** due within 3 days
+- **Red:** overdue
 
-## Step 1: Put it online
+### Filters
+- **To do:** all unfinished tasks in priority order
+- **Today:** tasks due today, plus any overdue tasks
+- **By date:** tasks due on a date you choose
+- **Done:** finished tasks
+- **Level filter:** show only High, Medium, or Low tasks. This works together with any of the tabs above.
 
-### Option A: Netlify (easiest, no account needed to start)
+### Progress dashboard
+The dashboard shows:
+- Overall progress as a percentage
+- How many tasks are overdue, due today, or due in the next 7 days, and how many have no deadline
+- A chart of deadlines for the next 14 days. Tap a day to see its tasks.
+- The top 5 priority tasks and the most recently finished tasks
 
-1. Go to **https://app.netlify.com/drop**
-2. Drag this whole folder (the one containing `index.html`) onto the page.
-3. Netlify gives you a link like `https://something-random.netlify.app`. That's your site.
-4. To keep the site and change its name, create a free Netlify account and claim the site. Then go to **Site configuration → Change site name**.
+On a computer, the dashboard appears beside the list. On a phone, it appears above the list.
 
-To update the site later, open the site in Netlify, go to **Deploys**, and drag the folder again.
+### Add, edit, and delete
+Add new tasks, change any detail (name, level, deadline, section, notes), or delete tasks. After a delete, an **Undo** button appears for a few seconds in case of mistakes.
 
-### Option B: GitHub Pages
+### Languages
+Use the 🌐 **Language** button at the top to switch the whole page between **English**, **සිංහල (Sinhala)**, and **தமிழ் (Tamil)**. This changes all buttons and labels, and existing tasks are translated too.
 
-1. Sign in at **https://github.com** and click **New repository**. Give it a name such as `tasks`, make it **Public**, and click **Create repository**.
-2. Click **uploading an existing file**, drag in `index.html` and `README.md`, then click **Commit changes**.
-3. Go to **Settings → Pages**. Under **Branch**, choose `main` and `/ (root)`, then click **Save**.
-4. After a minute or two, your site will be at `https://YOUR-USERNAME.github.io/tasks/`.
+### View-only mode
+Add `?view` to the end of the link to open a read-only version. Anyone with this link can see all the tasks, deadlines, and progress, but can't change anything.
 
-To update the site later, upload the new `index.html` again in the repository.
-
----
-
-## Step 2 (recommended): Make it one shared live list with Firebase
-
-Without this step, each person's changes stay on their own device.
-
-1. Go to **https://console.firebase.google.com** and sign in with a Google account.
-2. Click **Create a project**, give it a name such as `my-tasks`, and click through the steps. You can turn off Google Analytics.
-3. In the left menu, open **Build → Firestore Database** and click **Create database**.
-   - **Location:** choose `asia-south1 (Mumbai)`, the closest to Sri Lanka.
-   - Choose **Start in production mode**, then click **Create**.
-4. Open the **Rules** tab, replace everything with the rules below, and click **Publish**:
-
-   ```
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       match /tasks/{taskId} {
-         allow read, write: if true;
-       }
-     }
-   }
-   ```
-
-5. Click the **gear icon → Project settings**. Under **Your apps**, click the **web icon `</>`**, give the app a nickname, and click **Register app**.
-6. Firebase shows a block of code containing `const firebaseConfig = { ... }`. Copy only the part from `{` to `}`.
-7. Open `index.html` in a text editor such as Notepad or VS Code. Near the top, find this line:
-
-   ```
-   window.FIREBASE_CONFIG = null;
-   ```
-
-   Replace `null` with what you copied, so it looks like this:
-
-   ```
-   window.FIREBASE_CONFIG = {
-     apiKey: "AIza...",
-     authDomain: "my-tasks.firebaseapp.com",
-     projectId: "my-tasks",
-     storageBucket: "my-tasks.appspot.com",
-     messagingSenderId: "1234567890",
-     appId: "1:1234567890:web:abc123"
-   };
-   ```
-
-8. Save the file and upload it again to Netlify or GitHub, following Step 1.
-9. Open your site once. The first time, it automatically fills the shared list with all your tasks. From then on, everyone sees the same live list.
-
----
-
-## Sharing with your sir
-
-- **Normal link** (can edit): `https://your-site.netlify.app/`
-- **View-only link** (can see tasks, progress and dashboard, but can't change anything): add `?view` to the end of the address, like `https://your-site.netlify.app/?view`
-
-Send your sir the view-only link if he only needs to follow progress.
-
-## Good to know
-
-- **Anyone who has the normal link can edit the list.** Only share it with your team. The `?view` link hides the editing buttons, but it doesn't add a password. For real logins, Firebase Authentication can be added later.
-- **The Claude version and this hosted version are separate lists.** Once you move to the hosted version, have everyone use only that link, so changes don't end up in two places.
-- **Translation:** all current tasks are already translated into Sinhala and Tamil. Automatic translation of *new* tasks only works inside Claude, so on Netlify or GitHub, new tasks show in the language they were typed in. All buttons and labels are still fully translated.
-- **Firebase cost:** the free "Spark" plan is more than enough for a team task list.
+## Built with
+A single HTML file using plain HTML, CSS, and JavaScript, with no frameworks or build tools. It works in any modern browser on phones, tablets, and computers, in both light and dark mode.
