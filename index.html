@@ -221,9 +221,9 @@ header{position:relative}
 .trstatus[hidden]{display:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* ---------- team / assignees ---------- */
-:root{--u1:#2F6BFF;--u2:#8B5CF6;--u3:#E0457B;--u4:#0E9F8E}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--u1:#6E97FF;--u2:#A98BFA;--u3:#F27BA3;--u4:#34C7B5}}
-:root[data-theme="dark"]{--u1:#6E97FF;--u2:#A98BFA;--u3:#F27BA3;--u4:#34C7B5}
+:root{--u1:#2F6BFF;--u2:#8B5CF6;--u3:#E0457B;--u4:#0E9F8E;--u5:#E8760C}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--u1:#6E97FF;--u2:#A98BFA;--u3:#F27BA3;--u4:#34C7B5;--u5:#F7A04B}}
+:root[data-theme="dark"]{--u1:#6E97FF;--u2:#A98BFA;--u3:#F27BA3;--u4:#34C7B5;--u5:#F7A04B}
 .teambar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-basis:100%;padding:8px 10px;margin-top:2px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
 .teambar > .lbl{font-size:.88rem;font-weight:600;color:var(--ink);margin-right:2px}
 .teambar > .tip{font-size:.8rem;color:var(--muted);flex:1 1 160px;min-width:0}
@@ -234,7 +234,7 @@ header{position:relative}
 .uchip.on small{color:#fff}
 .uchip.on .av{background:#fff;color:var(--ucol)}
 .av{display:inline-grid;place-items:center;border-radius:50%;background:var(--ucol);color:#fff;font-family:Poppins,"Bricolage Grotesque",sans-serif;font-weight:700;line-height:1;flex:0 0 auto}
-.u-T1{--ucol:var(--u1)} .u-T2{--ucol:var(--u2)} .u-T3{--ucol:var(--u3)} .u-T4{--ucol:var(--u4)}
+.u-T1{--ucol:var(--u1)} .u-T2{--ucol:var(--u2)} .u-T3{--ucol:var(--u3)} .u-T4{--ucol:var(--u4)} .u-T5{--ucol:var(--u5)} .u-none{--ucol:var(--muted)}
 .who{display:inline-flex;align-items:center;gap:3px;padding:2px 7px 2px 2px;border-radius:999px;background:color-mix(in srgb,var(--ucol) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--ucol) 50%,transparent);font:inherit;font-size:.8rem;font-weight:700;color:var(--ink);cursor:pointer}
 .who .av{width:24px;height:24px;font-size:.68rem}
 .who.ro{padding:2px}
@@ -250,11 +250,11 @@ body.assigning .task .body{cursor:copy}
 .assignbar button{font:inherit;font-weight:700;background:var(--bg);color:var(--ink);border:0;border-radius:8px;padding:6px 14px;cursor:pointer}
 .ughost{position:fixed;z-index:60;pointer-events:none;transform:translate(-50%,-60%) scale(1.08);box-shadow:0 10px 26px rgba(15,25,45,.35)}
 body.udragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
-.seg4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.seg4{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .seg4 button{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 4px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
 .seg4 button .av{width:24px;height:24px;font-size:.7rem}
 .seg4 button[aria-pressed="true"]{border-color:var(--ucol);background:color-mix(in srgb,var(--ucol) 16%,var(--surface))}
-.team-rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px}
+.team-rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:8px}
 .team-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font:inherit;color:inherit;text-align:left}
 .team-row .av{width:36px;height:36px;font-size:.9rem}
 .team-row b{display:block;font-size:.95rem}
@@ -270,6 +270,16 @@ body.udragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
   .teambar > .tip{display:none}
   .tab{padding:7px 12px}
 }
+.personbar .pf{display:inline-flex;align-items:center;gap:6px;padding:4px 11px 4px 4px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.88rem;font-weight:700;cursor:pointer}
+.personbar .pf .av{width:24px;height:24px;font-size:.68rem}
+.personbar .pf.all{padding:6px 12px}
+.personbar .pf.u-none .av{background:transparent;border:1.5px dashed var(--muted);color:var(--muted)}
+.personbar .pf.on{background:var(--ucol,var(--ink));border-color:var(--ucol,var(--ink));color:#fff}
+.personbar .pf.all.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.personbar .pf.on .av{background:#fff;color:var(--ucol)}
+.personbar .pf.u-none.on{--ucol:var(--muted)}
+.person-head{display:flex;align-items:center;gap:10px;margin:6px 4px 2px;font-weight:700}
+.person-head .av{width:30px;height:30px;font-size:.8rem}
 /* ---------- theme switch ---------- */
 .nav-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
 .themebtn{display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 14px 0 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.9rem;font-weight:600;cursor:pointer}
@@ -362,6 +372,7 @@ button:focus-visible,input:focus-visible{outline:2.5px solid var(--accent);outli
     </div>
     <span class="hint" id="hint" data-t="dragHint">Drag ⋮⋮ to reorder</span>
     <div class="levelbar" id="levelbar" role="group" aria-label="Filter by priority level"></div>
+    <div class="levelbar personbar" id="personbar" role="group" aria-label="Filter by person"></div>
     <div class="teambar" id="teambar"></div>
     <div class="assignbar" id="assignbar" role="status" aria-live="polite" hidden></div>
     <div class="datebar" id="datebar" hidden>
@@ -462,10 +473,10 @@ window.FIREBASE_CONFIG = {
   let canWrite = true;
   let loaded = false;
   let drag = null;
-  let levelFilter = "all", pickId = null, selLevel = "medium";
+  let levelFilter = "all", pickId = null, selLevel = "medium", personFilter = "all";
   const I18N = {
     en: {
-      langName:"English", team:"Team", teamTip:"Drag a name onto a task, or tap a name and then tap tasks.", teamTipRO:"", assigning:"Tap tasks to assign {u}. Tap again to remove.", finish:"Done", assignedTo:"Assigned to", unassignAria:"Remove {u} from this task", assignedToast:"{u} assigned", alreadyAssigned:"{u} is already on this task", workload:"Team workload", openDone:"{o} to do · {d} done", dragUserAria:"{u}: drag onto a task, or tap to start assigning", themeToDark:"Switch to dark mode", themeToLight:"Switch to light mode", darkShort:"Dark", lightShort:"Light", localMode:"This copy saves changes on this device only. To share one live list with your team, connect Firebase (see README).", viewLinkNotice:"View-only link: you can see the tasks and progress, but not change them.", cantLoadStandalone:"The shared list couldn’t connect. Check the Firebase settings and your internet connection.", language:"Language", title:"My tasks",
+      langName:"English", person:"Person:", nobody:"No one", noPersonHere:"No tasks for {u} here", notAssignedHere:"No unassigned tasks here", personTitle:"{u}’s tasks", unassignedTitle:"Tasks with no one assigned", team:"Team", teamTip:"Drag a name onto a task, or tap a name and then tap tasks.", teamTipRO:"", assigning:"Tap tasks to assign {u}. Tap again to remove.", finish:"Done", assignedTo:"Assigned to", unassignAria:"Remove {u} from this task", assignedToast:"{u} assigned", alreadyAssigned:"{u} is already on this task", workload:"Team workload", openDone:"{o} to do · {d} done", dragUserAria:"{u}: drag onto a task, or tap to start assigning", themeToDark:"Switch to dark mode", themeToLight:"Switch to light mode", darkShort:"Dark", lightShort:"Light", localMode:"This copy saves changes on this device only. To share one live list with your team, connect Firebase (see README).", viewLinkNotice:"View-only link: you can see the tasks and progress, but not change them.", cantLoadStandalone:"The shared list couldn’t connect. Check the Firebase settings and your internet connection.", language:"Language", title:"My tasks",
       todo:"To do", today:"Today", byDate:"By date", done:"Done",
       dragHint:"Drag ⋮⋮ to reorder", viewOnly:"View only", level:"Level:", all:"All",
       high:"High", medium:"Medium", low:"Low",
@@ -511,7 +522,7 @@ window.FIREBASE_CONFIG = {
       todayP:"Today, ", tomorrowP:"Tomorrow, ", yesterdayP:"Yesterday, "
     },
     si: {
-      langName:"සිංහල", team:"කණ්ඩායම", teamTip:"කාර්යයකට නමක් අදින්න, නැතහොත් නමක් තට්ටු කර පසුව කාර්යයන් තට්ටු කරන්න.", teamTipRO:"", assigning:"{u} පැවරීමට කාර්යයන් තට්ටු කරන්න. ඉවත් කිරීමට නැවත තට්ටු කරන්න.", finish:"අවසන්", assignedTo:"පවරා ඇත්තේ", unassignAria:"මෙම කාර්යයෙන් {u} ඉවත් කරන්න", assignedToast:"{u} පවරන ලදී", alreadyAssigned:"{u} දැනටමත් මෙම කාර්යයට පවරා ඇත", workload:"කණ්ඩායම් වැඩ බර", openDone:"කළ යුතු {o} · අවසන් {d}", dragUserAria:"{u}: කාර්යයකට අදින්න, නැතහොත් පැවරීම ආරම්භ කිරීමට තට්ටු කරන්න", themeToDark:"අඳුරු ප්‍රකාරයට මාරු වන්න", themeToLight:"ආලෝක ප්‍රකාරයට මාරු වන්න", darkShort:"අඳුරු", lightShort:"ආලෝක", localMode:"මෙම පිටපත වෙනස්කම් සුරකින්නේ මෙම උපාංගයේ පමණි. ඔබේ කණ්ඩායම සමඟ එකම සජීවී ලැයිස්තුවක් බෙදා ගැනීමට Firebase සම්බන්ධ කරන්න (README බලන්න).", viewLinkNotice:"බැලීමට පමණක් සබැඳිය: ඔබට කාර්යයන් සහ ප්‍රගතිය දැකිය හැකි නමුත් වෙනස් කළ නොහැක.", cantLoadStandalone:"හවුල් ලැයිස්තුවට සම්බන්ධ විය නොහැකි විය. Firebase සැකසුම් සහ ඔබේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කරන්න.", language:"භාෂාව", title:"මගේ කාර්යයන්",
+      langName:"සිංහල", person:"පුද්ගලයා:", nobody:"කිසිවෙක් නැත", noPersonHere:"මෙහි {u} සඳහා කාර්යයන් නැත", notAssignedHere:"මෙහි නොපවරන ලද කාර්යයන් නැත", personTitle:"{u} ගේ කාර්යයන්", unassignedTitle:"කිසිවෙකුට නොපවරන ලද කාර්යයන්", team:"කණ්ඩායම", teamTip:"කාර්යයකට නමක් අදින්න, නැතහොත් නමක් තට්ටු කර පසුව කාර්යයන් තට්ටු කරන්න.", teamTipRO:"", assigning:"{u} පැවරීමට කාර්යයන් තට්ටු කරන්න. ඉවත් කිරීමට නැවත තට්ටු කරන්න.", finish:"අවසන්", assignedTo:"පවරා ඇත්තේ", unassignAria:"මෙම කාර්යයෙන් {u} ඉවත් කරන්න", assignedToast:"{u} පවරන ලදී", alreadyAssigned:"{u} දැනටමත් මෙම කාර්යයට පවරා ඇත", workload:"කණ්ඩායම් වැඩ බර", openDone:"කළ යුතු {o} · අවසන් {d}", dragUserAria:"{u}: කාර්යයකට අදින්න, නැතහොත් පැවරීම ආරම්භ කිරීමට තට්ටු කරන්න", themeToDark:"අඳුරු ප්‍රකාරයට මාරු වන්න", themeToLight:"ආලෝක ප්‍රකාරයට මාරු වන්න", darkShort:"අඳුරු", lightShort:"ආලෝක", localMode:"මෙම පිටපත වෙනස්කම් සුරකින්නේ මෙම උපාංගයේ පමණි. ඔබේ කණ්ඩායම සමඟ එකම සජීවී ලැයිස්තුවක් බෙදා ගැනීමට Firebase සම්බන්ධ කරන්න (README බලන්න).", viewLinkNotice:"බැලීමට පමණක් සබැඳිය: ඔබට කාර්යයන් සහ ප්‍රගතිය දැකිය හැකි නමුත් වෙනස් කළ නොහැක.", cantLoadStandalone:"හවුල් ලැයිස්තුවට සම්බන්ධ විය නොහැකි විය. Firebase සැකසුම් සහ ඔබේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කරන්න.", language:"භාෂාව", title:"මගේ කාර්යයන්",
       todo:"කළ යුතු", today:"අද", byDate:"දිනය අනුව", done:"අවසන්",
       dragHint:"පිළිවෙළ වෙනස් කිරීමට ⋮⋮ අදින්න", viewOnly:"බැලීමට පමණි", level:"මට්ටම:", all:"සියල්ල",
       high:"ඉහළ", medium:"මධ්‍යම", low:"අඩු",
@@ -557,7 +568,7 @@ window.FIREBASE_CONFIG = {
       todayP:"අද, ", tomorrowP:"හෙට, ", yesterdayP:"ඊයේ, "
     },
     ta: {
-      langName:"தமிழ்", team:"குழு", teamTip:"ஒரு பெயரைப் பணியின் மீது இழுக்கவும், அல்லது பெயரைத் தட்டிப் பின் பணிகளைத் தட்டவும்.", teamTipRO:"", assigning:"{u} ஐ ஒதுக்கப் பணிகளைத் தட்டவும். நீக்க மீண்டும் தட்டவும்.", finish:"முடிந்தது", assignedTo:"ஒதுக்கப்பட்டவர்", unassignAria:"இந்தப் பணியிலிருந்து {u} ஐ நீக்கு", assignedToast:"{u} ஒதுக்கப்பட்டார்", alreadyAssigned:"{u} ஏற்கனவே இந்தப் பணியில் உள்ளார்", workload:"குழு பணிச்சுமை", openDone:"செய்ய வேண்டியவை {o} · முடிந்தவை {d}", dragUserAria:"{u}: பணியின் மீது இழுக்கவும், அல்லது ஒதுக்கத் தொடங்கத் தட்டவும்", themeToDark:"இருண்ட பயன்முறைக்கு மாறவும்", themeToLight:"ஒளி பயன்முறைக்கு மாறவும்", darkShort:"இருண்ட", lightShort:"ஒளி", localMode:"இந்தப் பிரதி மாற்றங்களை இந்தச் சாதனத்தில் மட்டுமே சேமிக்கிறது. உங்கள் குழுவுடன் ஒரே நேரலைப் பட்டியலைப் பகிர Firebase ஐ இணைக்கவும் (README ஐப் பார்க்கவும்).", viewLinkNotice:"பார்வைக்கு மட்டும் இணைப்பு: பணிகளையும் முன்னேற்றத்தையும் பார்க்கலாம், ஆனால் மாற்ற முடியாது.", cantLoadStandalone:"பகிரப்பட்ட பட்டியலுடன் இணைக்க முடியவில்லை. Firebase அமைப்புகளையும் இணைய இணைப்பையும் சரிபார்க்கவும்.", language:"மொழி", title:"எனது பணிகள்",
+      langName:"தமிழ்", person:"நபர்:", nobody:"யாரும் இல்லை", noPersonHere:"இங்கே {u} க்கான பணிகள் இல்லை", notAssignedHere:"இங்கே ஒதுக்கப்படாத பணிகள் இல்லை", personTitle:"{u} இன் பணிகள்", unassignedTitle:"யாருக்கும் ஒதுக்கப்படாத பணிகள்", team:"குழு", teamTip:"ஒரு பெயரைப் பணியின் மீது இழுக்கவும், அல்லது பெயரைத் தட்டிப் பின் பணிகளைத் தட்டவும்.", teamTipRO:"", assigning:"{u} ஐ ஒதுக்கப் பணிகளைத் தட்டவும். நீக்க மீண்டும் தட்டவும்.", finish:"முடிந்தது", assignedTo:"ஒதுக்கப்பட்டவர்", unassignAria:"இந்தப் பணியிலிருந்து {u} ஐ நீக்கு", assignedToast:"{u} ஒதுக்கப்பட்டார்", alreadyAssigned:"{u} ஏற்கனவே இந்தப் பணியில் உள்ளார்", workload:"குழு பணிச்சுமை", openDone:"செய்ய வேண்டியவை {o} · முடிந்தவை {d}", dragUserAria:"{u}: பணியின் மீது இழுக்கவும், அல்லது ஒதுக்கத் தொடங்கத் தட்டவும்", themeToDark:"இருண்ட பயன்முறைக்கு மாறவும்", themeToLight:"ஒளி பயன்முறைக்கு மாறவும்", darkShort:"இருண்ட", lightShort:"ஒளி", localMode:"இந்தப் பிரதி மாற்றங்களை இந்தச் சாதனத்தில் மட்டுமே சேமிக்கிறது. உங்கள் குழுவுடன் ஒரே நேரலைப் பட்டியலைப் பகிர Firebase ஐ இணைக்கவும் (README ஐப் பார்க்கவும்).", viewLinkNotice:"பார்வைக்கு மட்டும் இணைப்பு: பணிகளையும் முன்னேற்றத்தையும் பார்க்கலாம், ஆனால் மாற்ற முடியாது.", cantLoadStandalone:"பகிரப்பட்ட பட்டியலுடன் இணைக்க முடியவில்லை. Firebase அமைப்புகளையும் இணைய இணைப்பையும் சரிபார்க்கவும்.", language:"மொழி", title:"எனது பணிகள்",
       todo:"செய்ய வேண்டியவை", today:"இன்று", byDate:"தேதி வாரியாக", done:"முடிந்தவை",
       dragHint:"வரிசையை மாற்ற ⋮⋮ ஐ இழுக்கவும்", viewOnly:"பார்வைக்கு மட்டும்", level:"நிலை:", all:"அனைத்தும்",
       high:"உயர்", medium:"நடுத்தர", low:"குறைந்த",
@@ -615,7 +626,7 @@ window.FIREBASE_CONFIG = {
   }
   function LOC(){ return LOCALES[lang] || undefined; }
   /* ---------- team members & assigning ---------- */
-  const USERS = ["T1","T2","T3","T4"];
+  const USERS = ["T1","T2","T3","T4","T5"];
   let assignUser = null, udrag = null, selWho = [];
   function setAssignees(t, list){
     const clean = USERS.filter(u=>list.includes(u));
@@ -1052,7 +1063,7 @@ window.FIREBASE_CONFIG = {
         ${parts.length?`<div class="meta">${parts.join("")}</div>`:""}
       </div>
       <button class="check" aria-label="${esc(T(t.done?"markNotDone":"markDone",{t:TXF(t,"title")}))}"${canWrite?"":" disabled"}><span></span></button>
-      ${!t.done && canWrite && filter==="todo" && levelFilter==="all" ? `<button class="handle" aria-label="${esc(T("dragAria",{t:TXF(t,"title")}))}"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg></button>` : ""}
+      ${!t.done && canWrite && filter==="todo" && levelFilter==="all" && personFilter==="all" ? `<button class="handle" aria-label="${esc(T("dragAria",{t:TXF(t,"title")}))}"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg></button>` : ""}
     </li>`;
   }
 
@@ -1073,13 +1084,21 @@ window.FIREBASE_CONFIG = {
     const lvCount = k => baseList.filter(t=>(LV[t.priority]?t.priority:"none")===k).length;
     $("#levelbar").innerHTML = `<span>${esc(T("level"))}</span><button type="button" class="lvl all${levelFilter==="all"?" on":""}" data-lf="all" aria-pressed="${levelFilter==="all"}">${esc(T("all"))} (${baseList.length})</button>` +
       ["high","medium","low"].map(k=>`<button type="button" class="lvl lv-${k}${levelFilter===k?" on":""}" data-lf="${k}" aria-pressed="${levelFilter===k}"><i></i>${LV[k]} (${lvCount(k)})</button>`).join("");
-    const list = levelFilter==="all" ? baseList : baseList.filter(t=>t.priority===levelFilter);
+    const lvList = levelFilter==="all" ? baseList : baseList.filter(t=>t.priority===levelFilter);
+    const whoOf = t => (Array.isArray(t.assignees) ? t.assignees : []).filter(u=>USERS.includes(u));
+    const pCount = k => lvList.filter(t=> k==="none" ? !whoOf(t).length : whoOf(t).includes(k)).length;
+    $("#personbar").innerHTML = `<span>${esc(T("person"))}</span><button type="button" class="pf all${personFilter==="all"?" on":""}" data-pf="all" aria-pressed="${personFilter==="all"}">${esc(T("all"))} (${lvList.length})</button>` +
+      USERS.map(u=>`<button type="button" class="pf u-${u}${personFilter===u?" on":""}" data-pf="${u}" aria-pressed="${personFilter===u}"><span class="av">${u}</span>${pCount(u)}</button>`).join("") +
+      `<button type="button" class="pf u-none${personFilter==="none"?" on":""}" data-pf="none" aria-pressed="${personFilter==="none"}"><span class="av">–</span>${esc(T("nobody"))} (${pCount("none")})</button>`;
+    const list = personFilter==="all" ? lvList : lvList.filter(t=> personFilter==="none" ? !whoOf(t).length : whoOf(t).includes(personFilter));
     $("#datebar").hidden = filter!=="date";
     $("#dPick").value = filterDate;
     const rank = id => open.findIndex(x=>x.id===id) + 1;
-    $("#hint").style.display = filter==="todo" && canWrite && levelFilter==="all" ? "" : "none";
+    $("#hint").style.display = filter==="todo" && canWrite && levelFilter==="all" && personFilter==="all" ? "" : "none";
     let html;
-    if(!list.length && levelFilter!=="all" && baseList.length){
+    if(!list.length && personFilter!=="all" && lvList.length){
+      html = `<div class="empty"><strong>${esc(personFilter==="none" ? T("notAssignedHere") : T("noPersonHere",{u:personFilter}))}</strong><p>${esc(T("tapAll"))}</p></div>`;
+    } else if(!list.length && levelFilter!=="all" && baseList.length){
       html = `<div class="empty"><strong>${esc(T("noLevelHere",{l:lang==="en"?LV[levelFilter].toLowerCase():LV[levelFilter]}))}</strong><p>${esc(T("tapAll"))}</p></div>`;
     } else if(!list.length){
       const m = filter==="todo"
@@ -1408,6 +1427,10 @@ window.FIREBASE_CONFIG = {
   $("#list").addEventListener("keydown", e=>{
     const b = e.target.closest(".body");
     if(b && e.target===b && (e.key==="Enter" || e.key===" ")){ e.preventDefault(); const t = tasks.find(x=>x.id===b.closest(".task").dataset.id); if(t) openSheet(t); }
+  });
+  $("#personbar").addEventListener("click", e=>{
+    const b = e.target.closest("[data-pf]"); if(!b) return;
+    personFilter = b.dataset.pf; pickId = null; render();
   });
   $("#levelbar").addEventListener("click", e=>{
     const b = e.target.closest("[data-lf]"); if(!b) return;
