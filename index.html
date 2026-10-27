@@ -767,7 +767,7 @@ window.FIREBASE_CONFIG = null;
     const cfg = window.FIREBASE_CONFIG;
     if(!cfg){
       col = localCollection();
-      noticeK(canWrite ? "localMode" : "viewLinkNotice");
+      if(!canWrite) noticeK("viewLinkNotice");
       col.onSnapshot(snap=>{
         loaded = true;
         tasks = snap.docs.map(d=>Object.assign({}, d.data(), {id:d.id}));
