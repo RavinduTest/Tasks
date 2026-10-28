@@ -476,7 +476,7 @@ window.FIREBASE_CONFIG = {
   let levelFilter = "all", pickId = null, selLevel = "medium", personFilter = "all";
   const I18N = {
     en: {
-      langName:"English", person:"Person:", nobody:"No one", noPersonHere:"No tasks for {u} here", notAssignedHere:"No unassigned tasks here", personTitle:"{u}’s tasks", unassignedTitle:"Tasks with no one assigned", team:"Team", teamTip:"Drag a name onto a task, or tap a name and then tap tasks.", teamTipRO:"", assigning:"Tap tasks to assign {u}. Tap again to remove.", finish:"Done", assignedTo:"Assigned to", unassignAria:"Remove {u} from this task", assignedToast:"{u} assigned", alreadyAssigned:"{u} is already on this task", workload:"Team workload", openDone:"{o} to do · {d} done", dragUserAria:"{u}: drag onto a task, or tap to start assigning", themeToDark:"Switch to dark mode", themeToLight:"Switch to light mode", darkShort:"Dark", lightShort:"Light", localMode:"This copy saves changes on this device only. To share one live list with your team, connect Firebase (see README).", viewLinkNotice:"View-only link: you can see the tasks and progress, but not change them.", cantLoadStandalone:"The shared list couldn’t connect. Check the Firebase settings and your internet connection.", language:"Language", title:"My tasks",
+      langName:"English", markedDone:"Marked as done", markedNotDone:"Moved back to To do", person:"Person:", nobody:"No one", noPersonHere:"No tasks for {u} here", notAssignedHere:"No unassigned tasks here", personTitle:"{u}’s tasks", unassignedTitle:"Tasks with no one assigned", team:"Team", teamTip:"Drag a name onto a task, or tap a name and then tap tasks.", teamTipRO:"", assigning:"Tap tasks to assign {u}.", finish:"Done", assignedTo:"Assigned to", unassignAria:"Remove {u} from this task", assignedToast:"{u} assigned", alreadyAssigned:"{u} is already on this task", workload:"Team workload", openDone:"{o} to do · {d} done", dragUserAria:"{u}: drag onto a task, or tap to start assigning", themeToDark:"Switch to dark mode", themeToLight:"Switch to light mode", darkShort:"Dark", lightShort:"Light", localMode:"This copy saves changes on this device only. To share one live list with your team, connect Firebase (see README).", viewLinkNotice:"View-only link: you can see the tasks and progress, but not change them.", cantLoadStandalone:"The shared list couldn’t connect. Check the Firebase settings and your internet connection.", language:"Language", title:"My tasks",
       todo:"To do", today:"Today", byDate:"By date", done:"Done",
       dragHint:"Drag ⋮⋮ to reorder", viewOnly:"View only", level:"Level:", all:"All",
       high:"High", medium:"Medium", low:"Low",
@@ -522,7 +522,7 @@ window.FIREBASE_CONFIG = {
       todayP:"Today, ", tomorrowP:"Tomorrow, ", yesterdayP:"Yesterday, "
     },
     si: {
-      langName:"සිංහල", person:"පුද්ගලයා:", nobody:"කිසිවෙක් නැත", noPersonHere:"මෙහි {u} සඳහා කාර්යයන් නැත", notAssignedHere:"මෙහි නොපවරන ලද කාර්යයන් නැත", personTitle:"{u} ගේ කාර්යයන්", unassignedTitle:"කිසිවෙකුට නොපවරන ලද කාර්යයන්", team:"කණ්ඩායම", teamTip:"කාර්යයකට නමක් අදින්න, නැතහොත් නමක් තට්ටු කර පසුව කාර්යයන් තට්ටු කරන්න.", teamTipRO:"", assigning:"{u} පැවරීමට කාර්යයන් තට්ටු කරන්න. ඉවත් කිරීමට නැවත තට්ටු කරන්න.", finish:"අවසන්", assignedTo:"පවරා ඇත්තේ", unassignAria:"මෙම කාර්යයෙන් {u} ඉවත් කරන්න", assignedToast:"{u} පවරන ලදී", alreadyAssigned:"{u} දැනටමත් මෙම කාර්යයට පවරා ඇත", workload:"කණ්ඩායම් වැඩ බර", openDone:"කළ යුතු {o} · අවසන් {d}", dragUserAria:"{u}: කාර්යයකට අදින්න, නැතහොත් පැවරීම ආරම්භ කිරීමට තට්ටු කරන්න", themeToDark:"අඳුරු ප්‍රකාරයට මාරු වන්න", themeToLight:"ආලෝක ප්‍රකාරයට මාරු වන්න", darkShort:"අඳුරු", lightShort:"ආලෝක", localMode:"මෙම පිටපත වෙනස්කම් සුරකින්නේ මෙම උපාංගයේ පමණි. ඔබේ කණ්ඩායම සමඟ එකම සජීවී ලැයිස්තුවක් බෙදා ගැනීමට Firebase සම්බන්ධ කරන්න (README බලන්න).", viewLinkNotice:"බැලීමට පමණක් සබැඳිය: ඔබට කාර්යයන් සහ ප්‍රගතිය දැකිය හැකි නමුත් වෙනස් කළ නොහැක.", cantLoadStandalone:"හවුල් ලැයිස්තුවට සම්බන්ධ විය නොහැකි විය. Firebase සැකසුම් සහ ඔබේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කරන්න.", language:"භාෂාව", title:"මගේ කාර්යයන්",
+      langName:"සිංහල", markedDone:"අවසන් ලෙස සලකුණු කළා", markedNotDone:"නැවත කළ යුතු ලැයිස්තුවට ගෙන ගියා", person:"පුද්ගලයා:", nobody:"කිසිවෙක් නැත", noPersonHere:"මෙහි {u} සඳහා කාර්යයන් නැත", notAssignedHere:"මෙහි නොපවරන ලද කාර්යයන් නැත", personTitle:"{u} ගේ කාර්යයන්", unassignedTitle:"කිසිවෙකුට නොපවරන ලද කාර්යයන්", team:"කණ්ඩායම", teamTip:"කාර්යයකට නමක් අදින්න, නැතහොත් නමක් තට්ටු කර පසුව කාර්යයන් තට්ටු කරන්න.", teamTipRO:"", assigning:"{u} පැවරීමට කාර්යයන් තට්ටු කරන්න.", finish:"අවසන්", assignedTo:"පවරා ඇත්තේ", unassignAria:"මෙම කාර්යයෙන් {u} ඉවත් කරන්න", assignedToast:"{u} පවරන ලදී", alreadyAssigned:"{u} දැනටමත් මෙම කාර්යයට පවරා ඇත", workload:"කණ්ඩායම් වැඩ බර", openDone:"කළ යුතු {o} · අවසන් {d}", dragUserAria:"{u}: කාර්යයකට අදින්න, නැතහොත් පැවරීම ආරම්භ කිරීමට තට්ටු කරන්න", themeToDark:"අඳුරු ප්‍රකාරයට මාරු වන්න", themeToLight:"ආලෝක ප්‍රකාරයට මාරු වන්න", darkShort:"අඳුරු", lightShort:"ආලෝක", localMode:"මෙම පිටපත වෙනස්කම් සුරකින්නේ මෙම උපාංගයේ පමණි. ඔබේ කණ්ඩායම සමඟ එකම සජීවී ලැයිස්තුවක් බෙදා ගැනීමට Firebase සම්බන්ධ කරන්න (README බලන්න).", viewLinkNotice:"බැලීමට පමණක් සබැඳිය: ඔබට කාර්යයන් සහ ප්‍රගතිය දැකිය හැකි නමුත් වෙනස් කළ නොහැක.", cantLoadStandalone:"හවුල් ලැයිස්තුවට සම්බන්ධ විය නොහැකි විය. Firebase සැකසුම් සහ ඔබේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කරන්න.", language:"භාෂාව", title:"මගේ කාර්යයන්",
       todo:"කළ යුතු", today:"අද", byDate:"දිනය අනුව", done:"අවසන්",
       dragHint:"පිළිවෙළ වෙනස් කිරීමට ⋮⋮ අදින්න", viewOnly:"බැලීමට පමණි", level:"මට්ටම:", all:"සියල්ල",
       high:"ඉහළ", medium:"මධ්‍යම", low:"අඩු",
@@ -568,7 +568,7 @@ window.FIREBASE_CONFIG = {
       todayP:"අද, ", tomorrowP:"හෙට, ", yesterdayP:"ඊයේ, "
     },
     ta: {
-      langName:"தமிழ்", person:"நபர்:", nobody:"யாரும் இல்லை", noPersonHere:"இங்கே {u} க்கான பணிகள் இல்லை", notAssignedHere:"இங்கே ஒதுக்கப்படாத பணிகள் இல்லை", personTitle:"{u} இன் பணிகள்", unassignedTitle:"யாருக்கும் ஒதுக்கப்படாத பணிகள்", team:"குழு", teamTip:"ஒரு பெயரைப் பணியின் மீது இழுக்கவும், அல்லது பெயரைத் தட்டிப் பின் பணிகளைத் தட்டவும்.", teamTipRO:"", assigning:"{u} ஐ ஒதுக்கப் பணிகளைத் தட்டவும். நீக்க மீண்டும் தட்டவும்.", finish:"முடிந்தது", assignedTo:"ஒதுக்கப்பட்டவர்", unassignAria:"இந்தப் பணியிலிருந்து {u} ஐ நீக்கு", assignedToast:"{u} ஒதுக்கப்பட்டார்", alreadyAssigned:"{u} ஏற்கனவே இந்தப் பணியில் உள்ளார்", workload:"குழு பணிச்சுமை", openDone:"செய்ய வேண்டியவை {o} · முடிந்தவை {d}", dragUserAria:"{u}: பணியின் மீது இழுக்கவும், அல்லது ஒதுக்கத் தொடங்கத் தட்டவும்", themeToDark:"இருண்ட பயன்முறைக்கு மாறவும்", themeToLight:"ஒளி பயன்முறைக்கு மாறவும்", darkShort:"இருண்ட", lightShort:"ஒளி", localMode:"இந்தப் பிரதி மாற்றங்களை இந்தச் சாதனத்தில் மட்டுமே சேமிக்கிறது. உங்கள் குழுவுடன் ஒரே நேரலைப் பட்டியலைப் பகிர Firebase ஐ இணைக்கவும் (README ஐப் பார்க்கவும்).", viewLinkNotice:"பார்வைக்கு மட்டும் இணைப்பு: பணிகளையும் முன்னேற்றத்தையும் பார்க்கலாம், ஆனால் மாற்ற முடியாது.", cantLoadStandalone:"பகிரப்பட்ட பட்டியலுடன் இணைக்க முடியவில்லை. Firebase அமைப்புகளையும் இணைய இணைப்பையும் சரிபார்க்கவும்.", language:"மொழி", title:"எனது பணிகள்",
+      langName:"தமிழ்", markedDone:"முடிந்ததாகக் குறிக்கப்பட்டது", markedNotDone:"மீண்டும் செய்ய வேண்டியவைக்கு மாற்றப்பட்டது", person:"நபர்:", nobody:"யாரும் இல்லை", noPersonHere:"இங்கே {u} க்கான பணிகள் இல்லை", notAssignedHere:"இங்கே ஒதுக்கப்படாத பணிகள் இல்லை", personTitle:"{u} இன் பணிகள்", unassignedTitle:"யாருக்கும் ஒதுக்கப்படாத பணிகள்", team:"குழு", teamTip:"ஒரு பெயரைப் பணியின் மீது இழுக்கவும், அல்லது பெயரைத் தட்டிப் பின் பணிகளைத் தட்டவும்.", teamTipRO:"", assigning:"{u} ஐ ஒதுக்கப் பணிகளைத் தட்டவும்.", finish:"முடிந்தது", assignedTo:"ஒதுக்கப்பட்டவர்", unassignAria:"இந்தப் பணியிலிருந்து {u} ஐ நீக்கு", assignedToast:"{u} ஒதுக்கப்பட்டார்", alreadyAssigned:"{u} ஏற்கனவே இந்தப் பணியில் உள்ளார்", workload:"குழு பணிச்சுமை", openDone:"செய்ய வேண்டியவை {o} · முடிந்தவை {d}", dragUserAria:"{u}: பணியின் மீது இழுக்கவும், அல்லது ஒதுக்கத் தொடங்கத் தட்டவும்", themeToDark:"இருண்ட பயன்முறைக்கு மாறவும்", themeToLight:"ஒளி பயன்முறைக்கு மாறவும்", darkShort:"இருண்ட", lightShort:"ஒளி", localMode:"இந்தப் பிரதி மாற்றங்களை இந்தச் சாதனத்தில் மட்டுமே சேமிக்கிறது. உங்கள் குழுவுடன் ஒரே நேரலைப் பட்டியலைப் பகிர Firebase ஐ இணைக்கவும் (README ஐப் பார்க்கவும்).", viewLinkNotice:"பார்வைக்கு மட்டும் இணைப்பு: பணிகளையும் முன்னேற்றத்தையும் பார்க்கலாம், ஆனால் மாற்ற முடியாது.", cantLoadStandalone:"பகிரப்பட்ட பட்டியலுடன் இணைக்க முடியவில்லை. Firebase அமைப்புகளையும் இணைய இணைப்பையும் சரிபார்க்கவும்.", language:"மொழி", title:"எனது பணிகள்",
       todo:"செய்ய வேண்டியவை", today:"இன்று", byDate:"தேதி வாரியாக", done:"முடிந்தவை",
       dragHint:"வரிசையை மாற்ற ⋮⋮ ஐ இழுக்கவும்", viewOnly:"பார்வைக்கு மட்டும்", level:"நிலை:", all:"அனைத்தும்",
       high:"உயர்", medium:"நடுத்தர", low:"குறைந்த",
@@ -626,6 +626,8 @@ window.FIREBASE_CONFIG = {
   }
   function LOC(){ return LOCALES[lang] || undefined; }
   /* ---------- team members & assigning ---------- */
+  const recentDone = new Set(); let lastViewKey = "";
+  function recentlyTicked(t){ return recentDone.has(t.id); }
   const USERS = ["T1","T2","T3","T4","T5"];
   let assignUser = null, udrag = null, selWho = [];
   function setAssignees(t, list){
@@ -1002,16 +1004,26 @@ window.FIREBASE_CONFIG = {
     undoTimer = setTimeout(()=>{ $("#toast").hidden = true; }, 4000);
   }
   function showUndo(msg, items){
-    undoItems = items.map(t=>Object.assign({}, t));
+    undoItems = items.map(t=>Object.assign({}, t)); undoFn = null;
     $("#toastMsg").textContent = msg;
     $("#undoBtn").hidden = false;
     $("#toast").hidden = false;
     clearTimeout(undoTimer);
     undoTimer = setTimeout(()=>{ $("#toast").hidden = true; undoItems = []; }, 7000);
   }
+  let undoFn = null;
+  function showUndoFn(msg, fn){
+    undoItems = []; undoFn = fn;
+    $("#toastMsg").textContent = msg;
+    $("#undoBtn").hidden = false;
+    $("#toast").hidden = false;
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(()=>{ $("#toast").hidden = true; undoFn = null; }, 7000);
+  }
   $("#undoBtn").addEventListener("click", async ()=>{
     const items = undoItems; undoItems = [];
     $("#toast").hidden = true; clearTimeout(undoTimer);
+    if(undoFn){ const f = undoFn; undoFn = null; f(); return; }
     for(const t of items){
       const {id, ...data} = t;
       if(!tasks.some(x=>x.id===id)) tasks.push(t);
@@ -1053,9 +1065,7 @@ window.FIREBASE_CONFIG = {
       : `<button type="button" class="lvl lv-${lv}" data-openlv aria-label="${esc(T("levelAria",{l:lv==="none"?T("notSet"):LV[lv]}))}"><i></i>${esc(lv==="none"?T("setLevel"):LV[lv])}</button>`;
     parts.unshift(lvHTML);
     const who = (Array.isArray(t.assignees) ? t.assignees : []).filter(u=>USERS.includes(u));
-    if(who.length) parts.splice(1, 0, who.map(u => canWrite
-      ? `<button type="button" class="who u-${u}" data-unassign="${u}" aria-label="${esc(T("unassignAria",{u}))}"><span class="av">${u}</span><span class="x" aria-hidden="true">×</span></button>`
-      : `<span class="who ro u-${u}"><span class="av">${u}</span></span>`).join(""));
+    if(who.length) parts.splice(1, 0, who.map(u => `<span class="who ro u-${u}"><span class="av">${u}</span></span>`).join(""));
     return `<li class="task lv-${lv}${t.done?" done":""}${(filter==="today"||filter==="date") && n>=1 && n<=3 ? " top" : ""}" data-id="${esc(t.id)}">
       <div class="num" aria-label="Priority ${n||""}"><span>${t.done?"✓":n}</span></div>
       <div class="body" role="button" tabindex="0" aria-label="${esc(T("editAria",{t:(n?n+", ":"")+TXF(t,"title")}))}">
@@ -1077,10 +1087,14 @@ window.FIREBASE_CONFIG = {
     if(overdue) s += ", " + T("sumOverdue",{n:overdue});
     $("#summary").innerHTML = s;
 
+    const vKey = [filter, levelFilter, personFilter, filterDate].join("|");
+    if(vKey !== lastViewKey){ recentDone.clear(); lastViewKey = vKey; }
+    const openPlus = tasks.filter(t=>!t.done || recentDone.has(t.id)).sort((a,b)=>ord(a)-ord(b));
     const todayList = open.filter(t=>t.date && t.date<=today);
+    const todayPlus = openPlus.filter(t=>t.date && t.date<=today);
     document.querySelector('.tab[data-f="today"]').textContent = T("today") + (todayList.length ? " ("+todayList.length+")" : "");
     const dateList = open.filter(t=>t.date===filterDate).concat(doneTasks().filter(t=>t.date===filterDate));
-    const baseList = filter==="todo" ? open : filter==="today" ? todayList : filter==="date" ? dateList : doneTasks();
+    const baseList = filter==="todo" ? openPlus : filter==="today" ? todayPlus : filter==="date" ? dateList : doneTasks();
     const lvCount = k => baseList.filter(t=>(LV[t.priority]?t.priority:"none")===k).length;
     $("#levelbar").innerHTML = `<span>${esc(T("level"))}</span><button type="button" class="lvl all${levelFilter==="all"?" on":""}" data-lf="all" aria-pressed="${levelFilter==="all"}">${esc(T("all"))} (${baseList.length})</button>` +
       ["high","medium","low"].map(k=>`<button type="button" class="lvl lv-${k}${levelFilter===k?" on":""}" data-lf="${k}" aria-pressed="${levelFilter===k}"><i></i>${LV[k]} (${lvCount(k)})</button>`).join("");
@@ -1234,7 +1248,7 @@ window.FIREBASE_CONFIG = {
   function renumber(){
     let n = 0;
     document.querySelectorAll("#ul > li").forEach(li=>{
-      if(li.classList.contains("lifted")) return;
+      if(li.classList.contains("lifted") || li.classList.contains("done")) return;
       n++;
       if(li.classList.contains("placeholder")){ drag.li.querySelector(".num span").textContent = n; return; }
       const sp = li.querySelector(".num span"); if(sp) sp.textContent = n;
@@ -1277,7 +1291,7 @@ window.FIREBASE_CONFIG = {
     if(!drag) return;
     cancelAnimationFrame(drag.raf);
     const {li, ph, id} = drag;
-    const ids = [...document.querySelectorAll("#ul > li")].filter(x=>x!==li).map(x=> x===ph ? "__ph" : x.dataset.id);
+    const ids = [...document.querySelectorAll("#ul > li")].filter(x=>x!==li && !x.classList.contains("done")).map(x=> x===ph ? "__ph" : x.dataset.id);
     const idx = ids.indexOf("__ph");
     ph.remove();
     li.classList.remove("lifted"); li.style.cssText = "";
@@ -1404,7 +1418,9 @@ window.FIREBASE_CONFIG = {
     if(un){ if(canWrite) setAssignees(t, (t.assignees||[]).filter(u=>u!==un.dataset.unassign)); return; }
     if(assignUser && canWrite && !e.target.closest(".check, .handle, [data-openlv], [data-setlv]")){
       const cur = Array.isArray(t.assignees) ? t.assignees : [];
-      setAssignees(t, cur.includes(assignUser) ? cur.filter(u=>u!==assignUser) : cur.concat([assignUser]));
+      if(cur.includes(assignUser)){ flash(T("alreadyAssigned",{u:assignUser})); return; }
+      setAssignees(t, cur.concat([assignUser]));
+      flash(T("assignedToast",{u:assignUser}));
       return;
     }
     if(e.target.closest("[data-openlv]")){ if(canWrite){ pickId = t.id; render(); } else openSheet(t); return; }
@@ -1413,8 +1429,17 @@ window.FIREBASE_CONFIG = {
     if(pickId){ pickId = null; render(); }
     if(e.target.closest(".check")){
       if(!canWrite) return;
-      if(t.done){ const open = openTasks(); updateTask(t.id, {done:false, doneAt:null, order: orderAt(open, open.length)}); }
-      else updateTask(t.id, {done:true, doneAt:Date.now()});
+      const before = {done: !!t.done, doneAt: t.doneAt || null, order: ord(t)};
+      if(t.done){
+        const open = openTasks();
+        recentDone.delete(t.id);
+        updateTask(t.id, {done:false, doneAt:null, order: recentlyTicked(t) ? ord(t) : orderAt(open, open.length)});
+        showUndoFn(T("markedNotDone"), ()=>{ recentDone.add(t.id); updateTask(t.id, {done:true, doneAt: before.doneAt || Date.now(), order: before.order}); });
+      } else {
+        recentDone.add(t.id);
+        updateTask(t.id, {done:true, doneAt:Date.now()});
+        showUndoFn(T("markedDone"), ()=>{ recentDone.delete(t.id); updateTask(t.id, {done:false, doneAt:null, order: before.order}); });
+      }
     }
     else if(e.target.closest(".body")) openSheet(t);
   });
